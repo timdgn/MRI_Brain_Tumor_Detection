@@ -10,6 +10,17 @@ COLORS_GREEN = ['#01411C', '#4B6F44', '#4F7942', '#74C365', '#D0F0C0']
 # Tumor labels
 LABELS = ['glioma_tumor', 'no_tumor', 'meningioma_tumor', 'pituitary_tumor']
 
+# Image size (pixels)
+IMAGE_SIZE = 150
+
+# Limit the number of images
+# A number or None
+IMG_LIMIT = 10
+
+# Epochs
+EPOCHS = 12
+
+
 if __name__ == '__main__':
     sns.palplot(COLORS_DARK)
     sns.palplot(COLORS_GREEN)
