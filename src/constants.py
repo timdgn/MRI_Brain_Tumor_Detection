@@ -13,12 +13,11 @@ LABELS = ['glioma_tumor', 'no_tumor', 'meningioma_tumor', 'pituitary_tumor']
 # Image size (pixels)
 IMAGE_SIZE = 150
 
-# Limit the number of images
-# A number or None
-IMG_LIMIT = 10
+# Limit the number of images. Should be an integer or None
+IMG_LIMIT = None
 
 # Epochs
-EPOCHS = 12
+EPOCHS = 15
 
 
 if __name__ == '__main__':
