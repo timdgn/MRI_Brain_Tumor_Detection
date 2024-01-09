@@ -17,7 +17,7 @@ IMAGE_SIZE = 150
 IMG_LIMIT = None
 
 # Epochs
-EPOCHS = 15
+EPOCHS = 20
 
 
 if __name__ == '__main__':

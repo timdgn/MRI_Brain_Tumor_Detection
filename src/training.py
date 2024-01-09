@@ -106,7 +106,7 @@ def plot_history(history, now):
     ax[1].set_xlabel('Epochs')
     ax[1].set_ylabel('Loss')
 
-    output_dir = os.path.join(os.getcwd(), '..', 'plots')
+    output_dir = os.path.join(os.getcwd(), '..', 'plots', 'history')
     filename = f"Accuracy_Loss_{now.strftime('%Y-%m-%d_%H-%M-%S')}.png"
     plt.savefig(os.path.join(output_dir, filename), dpi=300)
 
@@ -169,7 +169,7 @@ def plot_conf_matrix(y_pred, y_test, now):
     ax.set_title('Heatmap of the Confusion Matrix', size=18, fontweight='bold',
                 color=COLORS_DARK[1])
 
-    output_dir = os.path.join(os.getcwd(), '..', 'plots')
+    output_dir = os.path.join(os.getcwd(), '..', 'plots', 'confusion')
     filename = f"Confusion_Matrix_{now.strftime('%Y-%m-%d_%H-%M-%S')}.png"
     plt.savefig(os.path.join(output_dir, filename), dpi=300)
 
@@ -178,12 +178,12 @@ def plot_conf_matrix(y_pred, y_test, now):
 
 def plot_metrics(y_pred, y_test, now):
     """
-    Generates a plot of precision, F1 score, and recall based on the predicted labels and the actual labels.
+    Generates a lollipop plot of precision, F1 score, and recall based on the predicted labels and the actual labels.
 
     Parameters:
         y_pred (array-like): An array or a list-like object containing the predicted labels.
         y_test (array-like): An array or a list-like object containing the actual labels.
-
+        now (datetime.datetime): A datetime object representing the current date and time.
     Returns:
         None
     """
@@ -194,12 +194,13 @@ def plot_metrics(y_pred, y_test, now):
 
     metrics = {'Precision': precision, 'F1 Score': f1, 'Recall': recall}
 
-    fig, ax = plt.subplots(1, 1, figsize=(10, 6))
-    ax.bar(metrics.keys(), metrics.values(), color=COLORS_GREEN[::-1], alpha=0.7)
+    fig, ax = plt.subplots(figsize=(5, 7))
+    ax.vlines(x=list(metrics.keys()), ymin=0, ymax=list(metrics.values()), color=COLORS_GREEN[::-1], alpha=0.7)
+    ax.plot(list(metrics.keys()), list(metrics.values()), "o", color=COLORS_GREEN[0])
     ax.set_title('Metrics', size=18, fontweight='bold', color=COLORS_DARK[1])
-    ax.grid(True)
+    ax.grid(axis='y')
 
-    output_dir = os.path.join(os.getcwd(), '..', 'plots')
+    output_dir = os.path.join(os.getcwd(), '..', 'plots', 'metrics')
     filename = f"Metrics_{now.strftime('%Y-%m-%d_%H-%M-%S')}.png"
     plt.savefig(os.path.join(output_dir, filename), dpi=300)
 
