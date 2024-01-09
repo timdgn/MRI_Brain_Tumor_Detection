@@ -5,7 +5,7 @@ import os
 from sklearn.utils import shuffle
 from sklearn.model_selection import train_test_split
 import tensorflow as tf
-from variables import *
+from constants import *
 
 
 def load_data():

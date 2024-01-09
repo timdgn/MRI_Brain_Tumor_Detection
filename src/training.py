@@ -2,7 +2,7 @@ from warnings import filterwarnings
 import tensorflow as tf
 from tensorflow.keras.applications import EfficientNetB0
 from tensorflow.keras.callbacks import EarlyStopping, ReduceLROnPlateau, TensorBoard, ModelCheckpoint
-from variables import *
+from constants import *
 import preprocessing
 import datetime
 import os
