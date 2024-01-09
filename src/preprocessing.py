@@ -16,9 +16,9 @@ def load_data():
         X (np.array): Array of preprocessed images.
         y (np.array): Array of corresponding labels.
     """
+
     X = []
     y = []
-    image_size = 150
 
     # Load training and testing data
     for data_type in ['Training', 'Testing']:
@@ -26,7 +26,7 @@ def load_data():
             folder_path = os.path.join('../data', data_type, label)
             for filename in tqdm(os.listdir(folder_path)):
                 img = cv2.imread(os.path.join(folder_path, filename))
-                img = cv2.resize(img, (image_size, image_size))
+                img = cv2.resize(img, (IMAGE_SIZE, IMAGE_SIZE))
                 X.append(img)
                 y.append(label)
 
@@ -43,7 +43,12 @@ def split_data(X, y):
     Returns:
         tuple: A tuple containing the training and test sets for X and y.
     """
+
     X, y = shuffle(X, y, random_state=69)
+
+    if IMG_LIMIT:
+        X = X[:IMG_LIMIT]
+        y = y[:IMG_LIMIT]
 
     return train_test_split(X, y, test_size=0.1)
 
@@ -58,6 +63,7 @@ def one_hot(y_train, y_test):
     Returns:
         Tuple[np.ndarray, np.ndarray]: The one-hot encoded vectors for the training and testing labels.
     """
+
     # Convert labels to their corresponding indices in LABELS list
     y_train_indices = [LABELS.index(i) for i in y_train]
     y_test_indices = [LABELS.index(i) for i in y_test]
@@ -80,14 +86,21 @@ def main():
         y_train (array-like): One-hot encoded training target labels
         y_test (array-like): One-hot encoded testing target labels
     """
+
+    print('Starting preprocessing...')
+
     X, y = load_data()
     X_train, X_test, y_train, y_test = split_data(X, y)
     y_train, y_test = one_hot(y_train, y_test)
+
+    print('Preprocessing done !', end='\n\n')
 
     return X_train, X_test, y_train, y_test
 
 
 if __name__ == '__main__':
+
     X_train, X_test, y_train, y_test = main()
+
     print('finished')
 
