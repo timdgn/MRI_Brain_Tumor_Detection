@@ -1,14 +1,14 @@
-from warnings import filterwarnings
-import tensorflow as tf
-from tensorflow.keras.applications import EfficientNetB0
-from tensorflow.keras.callbacks import ReduceLROnPlateau, ModelCheckpoint
-from constants import *
-import preprocessing
 import datetime
 import os
+
 import numpy as np
+import tensorflow as tf
 from sklearn.metrics import confusion_matrix, precision_score, f1_score, recall_score
 from matplotlib.ticker import MaxNLocator
+from warnings import filterwarnings
+
+from constants import *
+import preprocessing
 
 
 def create_model():
@@ -20,7 +20,8 @@ def create_model():
     """
 
     # Create EfficientNetB0 model with pre-trained weights
-    effnet = EfficientNetB0(weights='imagenet', include_top=False, input_shape=(IMAGE_SIZE, IMAGE_SIZE, 3))
+    effnet = tf.keras.applications.EfficientNetB0(weights='imagenet', include_top=False,
+                                                  input_shape=(IMAGE_SIZE, IMAGE_SIZE, 3))
     model = tf.keras.layers.GlobalAveragePooling2D()(effnet.output)
     model = tf.keras.layers.Dropout(rate=0.5)(model)
     model = tf.keras.layers.Dense(4, activation='softmax')(model)
@@ -51,8 +52,8 @@ def train_model(model, X, y, now):
     # Set up callbacks for TensorBoard, model checkpointing, and learning rate reduction
     output_dir = os.path.join(os.getcwd(), '..', 'models')
     filename = f"effnet_{now.strftime('%Y-%m-%d_%H-%M-%S')}.keras"
-    checkpoint = ModelCheckpoint(os.path.join(output_dir, filename), monitor="val_accuracy", save_best_only=True, mode="auto", verbose=1)
-    reduce_lr = ReduceLROnPlateau(monitor='val_accuracy', factor=0.3, patience=2, min_delta=0.001, mode='auto',
+    checkpoint = tf.keras.callbacks.ModelCheckpoint(os.path.join(output_dir, filename), monitor="val_accuracy", save_best_only=True, mode="auto", verbose=1)
+    reduce_lr = tf.keras.callbacks.ReduceLROnPlateau(monitor='val_accuracy', factor=0.3, patience=2, min_delta=0.001, mode='auto',
                                   verbose=1)
 
     # Train the model with the specified data and training parameters

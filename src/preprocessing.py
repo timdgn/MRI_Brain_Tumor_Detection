@@ -1,10 +1,12 @@
-import numpy as np
-import cv2
-from tqdm import tqdm
 import os
-from sklearn.utils import shuffle
-from sklearn.model_selection import train_test_split
+
+import cv2
+import numpy as np
 import tensorflow as tf
+from tqdm import tqdm
+from sklearn.model_selection import train_test_split
+from sklearn.utils import shuffle
+
 from constants import *
 
 
