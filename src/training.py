@@ -8,6 +8,7 @@ import datetime
 import os
 import numpy as np
 from sklearn.metrics import confusion_matrix, precision_score, f1_score, recall_score
+from matplotlib.ticker import MaxNLocator
 
 
 def create_model():
@@ -63,6 +64,35 @@ def train_model(model, X, y, now):
     return history
 
 
+def plot_history_helper(epochs, metric_train, metric_val, ax, metric_name):
+    """
+    Helper function to plot a given metric (accuracy or loss).
+
+    Parameters:
+        epochs: List of epochs.
+        metric_train: Training metric values.
+        metric_val: Validation metric values.
+        ax: Matplotlib axis object.
+        metric_name: Name of the metric ('Accuracy' or 'Loss').
+
+    Returns:
+        None
+    """
+    ax.plot(epochs, metric_train, marker='o', markerfacecolor=COLORS_GREEN[2], color=COLORS_GREEN[3], label=f'Training {metric_name}')
+    ax.plot(epochs, metric_val, marker='o', markerfacecolor=COLORS_RED[2], color=COLORS_RED[3], label=f'Validation {metric_name}')
+    ax.legend(frameon=False)
+    ax.set_xlabel('Epochs')
+    ax.set_ylabel(metric_name)
+    ax.xaxis.set_major_locator(MaxNLocator(integer=True))
+    ax.grid()
+
+    for i, metric in enumerate(metric_train):
+        ax.annotate(f'{metric:.2f}', (epochs[i], metric), ha='center', va='bottom')
+
+    for i, metric in enumerate(metric_val):
+        ax.annotate(f'{metric:.2f}', (epochs[i], metric), ha='center', va='bottom')
+
+
 def plot_history(history, now):
     """
     Generate a plot to visualize the training and validation accuracy/loss over epochs.
@@ -78,39 +108,17 @@ def plot_history(history, now):
 
     epochs = [i+1 for i in range(EPOCHS)]
     fig, ax = plt.subplots(1, 2, figsize=(14, 7))
-    train_acc = history.history['accuracy']
-    train_loss = history.history['loss']
-    val_acc = history.history['val_accuracy']
-    val_loss = history.history['val_loss']
 
-    # fig.text(s='Epochs vs. Training and Validation Accuracy/Loss', size=18, fontweight='bold',
-    #          fontname='monospace', color=COLORS_DARK[1], y=1, x=0.28, alpha=0.8)
-    fig.suptitle('Epochs vs. Training and Validation Accuracy/Loss',
-                 fontsize=18, fontweight='bold', color=COLORS_DARK[1])
+    fig.suptitle('Epochs vs. Training and Validation Accuracy/Loss', fontsize=18, fontweight='bold', color=COLORS_DARK[1])
 
-    sns.despine()
-    ax[0].plot(epochs, train_acc, marker='o', markerfacecolor=COLORS_GREEN[2], color=COLORS_GREEN[3],
-               label='Training Accuracy')
-    ax[0].plot(epochs, val_acc, marker='o', markerfacecolor=COLORS_RED[2], color=COLORS_RED[3],
-               label='Validation Accuracy')
-    ax[0].legend(frameon=False)
-    ax[0].set_xlabel('Epochs')
-    ax[0].set_ylabel('Accuracy')
-
-    sns.despine()
-    ax[1].plot(epochs, train_loss, marker='o', markerfacecolor=COLORS_GREEN[2], color=COLORS_GREEN[3],
-               label='Training Loss')
-    ax[1].plot(epochs, val_loss, marker='o', markerfacecolor=COLORS_RED[2], color=COLORS_RED[3],
-               label='Validation Loss')
-    ax[1].legend(frameon=False)
-    ax[1].set_xlabel('Epochs')
-    ax[1].set_ylabel('Loss')
+    plot_history_helper(epochs, history.history['accuracy'], history.history['val_accuracy'], ax[0], 'Accuracy')
+    plot_history_helper(epochs, history.history['loss'], history.history['val_loss'], ax[1], 'Loss')
 
     output_dir = os.path.join(os.getcwd(), '..', 'plots', 'history')
     filename = f"Accuracy_Loss_{now.strftime('%Y-%m-%d_%H-%M-%S')}.png"
     plt.savefig(os.path.join(output_dir, filename), dpi=300)
 
-    fig.show()
+    plt.show()
 
 
 def load_last_model():
@@ -192,11 +200,15 @@ def plot_metrics(y_pred, y_test, now):
     f1 = f1_score(y_test, y_pred, average='macro')
     recall = recall_score(y_test, y_pred, average='macro')
 
-    metrics = {'Precision': precision, 'F1 Score': f1, 'Recall': recall}
+    metrics = {'Precision': precision, 'Recall': recall, 'F1 Score': f1}
 
     fig, ax = plt.subplots(figsize=(5, 7))
     ax.vlines(x=list(metrics.keys()), ymin=0, ymax=list(metrics.values()), color=COLORS_GREEN[::-1], alpha=0.7)
     ax.plot(list(metrics.keys()), list(metrics.values()), "o", color=COLORS_GREEN[0])
+
+    for i, metric in enumerate(metrics.keys()):
+        ax.text(i, metrics[metric], f'{metrics[metric]:.2f}', ha='center', va='bottom')
+
     ax.set_title('Metrics', size=18, fontweight='bold', color=COLORS_DARK[1])
     ax.grid(axis='y')
 
@@ -205,6 +217,7 @@ def plot_metrics(y_pred, y_test, now):
     plt.savefig(os.path.join(output_dir, filename), dpi=300)
 
     plt.show()
+
 
 
 def main(X_train, X_test, y_train, y_test):
