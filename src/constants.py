@@ -11,13 +11,13 @@ COLORS_GREEN = ['#01411C', '#4B6F44', '#4F7942', '#74C365', '#D0F0C0']
 LABELS = ['glioma_tumor', 'no_tumor', 'meningioma_tumor', 'pituitary_tumor']
 
 # Image size (pixels)
-IMAGE_SIZE = 150
+IMAGE_SIZE = 100
 
 # Limit the number of images. Should be an integer or None
 IMG_LIMIT = None
 
 # Epochs
-EPOCHS = 20
+EPOCHS = 200
 
 
 if __name__ == '__main__':
