@@ -7,7 +7,7 @@ from sklearn.metrics import confusion_matrix, precision_score, f1_score, recall_
 from matplotlib.ticker import MaxNLocator
 from warnings import filterwarnings
 
-from constants import *
+from settings import *
 import preprocessing
 
 
@@ -139,7 +139,7 @@ def load_last_model():
     return model
 
 
-def predict(model, X_test, y_test):
+def prediction(model, X_test, y_test):
     """
     Generate the predicted labels for the given test data using the provided model.
 
@@ -220,7 +220,6 @@ def plot_metrics(y_pred, y_test, now):
     plt.show()
 
 
-
 def main(X_train, X_test, y_train, y_test):
     """
     Trains a model with the provided training data, saves the trained model,
@@ -239,7 +238,7 @@ def main(X_train, X_test, y_train, y_test):
     plot_history(history, now)
 
     model = load_last_model()
-    y_pred, y_test = predict(model, X_test, y_test)
+    y_pred, y_test = prediction(model, X_test, y_test)
     plot_conf_matrix(y_pred, y_test, now)
     plot_metrics(y_pred, y_test, now)
 

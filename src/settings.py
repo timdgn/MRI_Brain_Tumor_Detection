@@ -8,16 +8,17 @@ COLORS_RED = ["#331313", "#582626", '#9E1717', '#D35151', '#E9B4B4']
 COLORS_GREEN = ['#01411C', '#4B6F44', '#4F7942', '#74C365', '#D0F0C0']
 
 # Tumor labels
-LABELS = ['glioma_tumor', 'no_tumor', 'meningioma_tumor', 'pituitary_tumor']
+LABELS = ['no_tumor', 'glioma_tumor', 'meningioma_tumor', 'pituitary_tumor']
 
 # Image size (pixels)
-IMAGE_SIZE = 100
+IMAGE_SIZE = 150
 
-# Limit the number of images. Should be an integer or None
+# Limiting the number of images for testing/debugging purpose
+# Should be an integer or None
 IMG_LIMIT = None
 
 # Epochs
-EPOCHS = 200
+EPOCHS = 20
 
 
 if __name__ == '__main__':
