@@ -3,6 +3,23 @@ import json
 import requests
 import preprocessing
 import numpy as np
+import time
+
+
+def progress_bar():
+    """
+    Function to display a progress bar and update it until completion.
+    """
+
+    progress_text = "Analyse de l'image par IA en cours..."
+    my_bar = st.progress(0, text=progress_text)
+
+    for percent_complete in range(100):
+        time.sleep(0.01)
+        my_bar.progress(percent_complete + 1, text=progress_text)
+
+    time.sleep(1)
+    my_bar.empty()
 
 
 st.title('# Brain Tumor Detection 🧠')
@@ -23,7 +40,7 @@ if 'numbers_list' not in st.session_state:
     st.session_state.numbers_list = np.random.choice(len(X), size=8, replace=True)
 
 # Showing random images
-st.image(st.session_state.X[st.session_state.numbers_list], width=150, caption=st.session_state.y[st.session_state.numbers_list])
+st.image(st.session_state.X[st.session_state.numbers_list], width=150, caption=st.session_state.numbers_list)
 st.write('')
 
 st.write("2️⃣ - Essaye de trouver visuellement une tumeur (s'il y en a une 🔍 )")
@@ -36,13 +53,10 @@ with st.form('my_form'):
     submit_button = st.form_submit_button(label='Diagnostic 👨‍⚕️')
 
 if submit_button:
-    st.session_state.chosen_number = chosen_number
-    st.write(st.session_state.y[st.session_state.chosen_number])
-    st.write(st.session_state.chosen_number)
 
     # Selecting the image
-    img = st.session_state.X[st.session_state.chosen_number]
-    true_label = st.session_state.y[st.session_state.chosen_number]
+    img = st.session_state.X[chosen_number]
+    true_label = st.session_state.y[chosen_number]
 
     # converting the inputs into a json format
     inputs = {'image': img.tolist()}
@@ -55,6 +69,9 @@ if submit_button:
     response = requests.post(url='http://127.0.0.1:8000/mri_app',
                              data=json.dumps(inputs))
     if response.status_code == 200:
+
+        progress_bar()
+
         resp = response.text[1:-1]
         if true_label == resp:
             st.write(f"Le modèle de deep learning a analysé l'image,"
