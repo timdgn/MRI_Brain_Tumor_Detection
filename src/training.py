@@ -129,8 +129,10 @@ def load_last_model():
     Returns:
         model: The loaded model.
     """
+    current_dir = os.path.dirname(os.path.abspath(__file__))
+    parent_dir = os.path.dirname(current_dir)
+    models_dir = os.path.join(parent_dir, 'models')
 
-    models_dir = os.path.join(os.getcwd(), '..', 'models')
     files = os.listdir(models_dir)
     filename = sorted(files)[-1]
 

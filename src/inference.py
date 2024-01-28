@@ -1,40 +1,32 @@
-import streamlit as st
-import json
-import requests
+from training import *
 import preprocessing
-import numpy as np
 
 
-st.title("Brain Tumor Detection 🧠🩻")
-st.write("#")
+def inference(model, img):
+    """
+    Generate the predicted labels for the given test data using the provided model.
 
-# Showing random images
-X, y = preprocessing.load_data()
-np.random.seed(69)
-numbers_list = np.random.choice(len(X), size=3, replace=True)
-st.image(X[numbers_list], width=150, caption=numbers_list)
-st.write("")
+    Parameters:
+        model (object): The trained model object used for prediction.
+        img (array-like): The test data to be used for prediction.
 
-# Selecting the image number
-number = st.selectbox("Select the number of the brain MRI image you want to diagnose :", numbers_list)
-st.write("")
+    Returns:
+        tuple: A tuple containing the predicted labels and the ground truth labels as arrays.
+    """
 
-# Selecting the image
-img = X[number]
-true_label = y[number]
+    y_pred = model.predict(img)
+    y_pred = np.argmax(y_pred, axis=1)
 
-# converting the inputs into a json format
-inputs = {"image": img}
-
-# when the user clicks on button it will fetch the API
-if st.button('Click to diagnose 👨‍⚕️'):
-    response = requests.post(url="http://fastapi_container:8000/myapp",  # todo change url to "http://fastapi_container:8000/myapp"
-                             data=json.dumps(inputs))
-    if response.status_code == 200:
-        st.write(f"The image you selected is a **{true_label}** brain MRI image")
-        st.subheader(response.text[1:-1])
-    else:
-        st.subheader(response.text)
+    return y_pred[0]
 
 
+if __name__ == "__main__":
 
+    X, y = preprocessing.load_data()
+    # img = X[1].tolist()
+    # img = np.array(img)
+    # img = np.expand_dims(img, axis=0)
+    model = load_last_model()
+    prediction = inference(model, X[1])
+
+    print(prediction)
