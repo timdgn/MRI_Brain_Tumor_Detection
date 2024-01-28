@@ -22,14 +22,14 @@ def progress_bar():
     my_bar.empty()
 
 
-st.title('# Brain Tumor Detection 🧠')
+st.title('Brain Tumor Detection 🧠')
 st.write('### with a ✨ Deep Learning ✨ algorithm')
 st.write('#')
 
 st.write("Tu vas pouvoir jouer à un petit jeu ! 👇 ")
 st.write("Chaque image présente l'un de ces éléments : Un glioblastome, un méningiome, une tumeur pituitaire ou bien aucune tumeur si le patient est chanceux !")
 st.write("#")
-st.write("1️⃣ - Choisis une image")
+st.write("1️⃣ - Voici des images d'IRM")
 
 # Selecting random numbers
 if 'numbers_list' not in st.session_state:
@@ -44,13 +44,14 @@ st.image(st.session_state.X[st.session_state.numbers_list], width=150, caption=s
 st.write('')
 
 st.write("2️⃣ - Essaye de trouver visuellement une tumeur (s'il y en a une 🔍 )")
-st.write("3️⃣ - Sélectionne le numéro de l'image ici 👇 et clique sur le bouton pour découvrir si tu es meilleur(e) que mon intelligence artificielle 🚀")
+st.write("3️⃣ - Sélectionne le numéro de l'image ici 👇 et clique sur le bouton pour découvrir si tu es meilleur(e) que mon IA 🚀")
 st.write('')
 
 # Creating the form
 with st.form('my_form'):
     chosen_number = st.selectbox('Choisis un numéro', st.session_state.numbers_list, label_visibility='collapsed')
     submit_button = st.form_submit_button(label='Diagnostic 👨‍⚕️')
+st.write('')
 
 if submit_button:
 
@@ -74,12 +75,11 @@ if submit_button:
 
         resp = response.text[1:-1]
         if true_label == resp:
-            st.write(f"Le modèle de deep learning a analysé l'image,"
-                     f" et l'a identifiée comme **{trad[resp]}**,"
-                     f" ce qui est le bon label ✅")
+            st.write(f"L'image a été identifiée par l'IA comme **{trad[resp]}**,"
+                     f" ce qui est le bon diagnostic ✅")
+
         else:
-            st.write(f"Le modèle de deep learning a analysé l'image,"
-                     f" et l'a identifiée comme **{trad[resp]}**,"
-                     f" ce qui n'est **PAS** le bon label (**{trad[true_label]}**) ❌")
+            st.write(f"L'image a été identifiée par l'IA comme \"**{trad[resp]}**\", "
+                     f"mais le vrai diagnostic est \"**{trad[true_label]}**\"...")
     else:
         st.subheader(response.text)
