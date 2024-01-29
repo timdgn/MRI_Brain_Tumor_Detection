@@ -241,8 +241,8 @@ def main(X_train, X_test, y_train, y_test):
 
     model = load_last_model()
     y_pred, y_test = prediction(model, X_test, y_test)
-    plot_conf_matrix(y_pred, y_test, now)
-    plot_metrics(y_pred, y_test, now)
+    plot_conf_matrix(y_pred, y_test, now)  # todo improve the confusion matrix plot
+    plot_metrics(y_pred, y_test, now)  # todo replace the plot by df plot
 
 
 if __name__ == '__main__':
