@@ -8,11 +8,18 @@ from sklearn.utils import shuffle
 from settings import *
 
 
-def load_data():
+def load_data(data_sets):
     """
     Load and preprocess image data for training and testing.
 
-    Returns:
+    Parameters
+    ----------
+    data_sets : list
+        List of data sets to load.
+        E.g. ['Training', 'Testing']
+
+    Returns
+    -------
         X (np.array): Array of preprocessed images.
         y (np.array): Array of corresponding labels.
     """
@@ -24,10 +31,10 @@ def load_data():
     y = []
 
     # Load training and testing data
-    for data_type in ['Training', 'Testing']:
+    for data_type in data_sets:
         for label in LABELS:
             folder_path = os.path.join(parent_dir, 'data', data_type, label)
-            for filename in tqdm(os.listdir(folder_path)):
+            for filename in tqdm(sorted(os.listdir(folder_path))):
                 img = cv2.imread(os.path.join(folder_path, filename))
                 img = cv2.resize(img, (IMAGE_SIZE, IMAGE_SIZE))
                 X.append(img)
@@ -92,7 +99,7 @@ def main():
 
     print('Starting preprocessing...')
 
-    X, y = load_data()
+    X, y = load_data(['Training', 'Testing'])
     X_train, X_test, y_train, y_test = split_data(X, y)
     y_train, y_test = one_hot(y_train, y_test)
 

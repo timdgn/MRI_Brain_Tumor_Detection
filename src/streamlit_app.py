@@ -33,11 +33,10 @@ st.write("1️⃣ - Voici des images d'IRM")
 
 # Selecting random numbers
 if 'numbers_list' not in st.session_state:
-    X, y = preprocessing.load_data()
-    np.random.seed()
+    X, y = preprocessing.load_data(['Testing'])
     st.session_state.X = X
     st.session_state.y = y
-    st.session_state.numbers_list = np.random.choice(len(X), size=8, replace=True)
+    st.session_state.numbers_list = np.random.choice(len(X), size=8, replace=False)
 
 # Showing random images
 st.image(st.session_state.X[st.session_state.numbers_list], width=150, caption=st.session_state.numbers_list)
@@ -52,6 +51,10 @@ with st.form('my_form'):
     chosen_number = st.selectbox('Choisis un numéro', st.session_state.numbers_list, label_visibility='collapsed')
     submit_button = st.form_submit_button(label='Diagnostic 👨‍⚕️')
 st.write('')
+
+# Debug weird diagnostic
+# weird_number = [1616]
+# st.image(st.session_state.X[weird_number], width=150, caption=st.session_state.y[weird_number])
 
 if submit_button:
 
@@ -71,7 +74,8 @@ if submit_button:
                              data=json.dumps(inputs))
     if response.status_code == 200:
 
-        progress_bar()
+        progress_bar()  # todo comme en prod, ajouter le chargement du modèle et l'envoi des data et la reception de la reponse dans la progress bar
+        # todo globalement copier les modifs (interessantes à appliquer ici) que j'ai faite pour la prod
 
         resp = response.text[1:-1]
         if true_label == resp:

@@ -22,7 +22,7 @@ def inference(model, img):
 
 if __name__ == "__main__":
 
-    X, y = preprocessing.load_data()
+    X, y = preprocessing.load_data(['Training', 'Testing'])
     # img = X[1].tolist()
     # img = np.array(img)
     # img = np.expand_dims(img, axis=0)
