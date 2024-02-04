@@ -1,5 +1,7 @@
-from training import *
-import preprocessing
+from training import load_last_model
+from preprocessing import load_data
+import numpy as np
+from settings import LABELS
 
 
 def inference(model, img):
@@ -22,11 +24,11 @@ def inference(model, img):
 
 if __name__ == "__main__":
 
-    X, y = preprocessing.load_data(['Training', 'Testing'])
-    # img = X[1].tolist()
-    # img = np.array(img)
-    # img = np.expand_dims(img, axis=0)
+    X, y = load_data(['Training', 'Testing'])
+    img = X[37]
+    img = np.expand_dims(img, axis=0)
     model = load_last_model()
-    prediction = inference(model, X[1])
+    pred_number = inference(model, img)
+    pred_label = LABELS[pred_number]
 
-    print(prediction)
+    print(pred_label)

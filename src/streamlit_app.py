@@ -1,12 +1,13 @@
-import streamlit as st
-import json
-import requests
-import preprocessing
-import numpy as np
 import time
+import requests
+import json
+import numpy as np
+import streamlit as st
+from preprocessing import load_data
+from settings import TRANSLATION
 
 
-def progress_bar():
+def progress_bar(inputs):
     """
     Function to display a progress bar and update it until completion.
     """
@@ -18,8 +19,14 @@ def progress_bar():
         time.sleep(0.01)
         my_bar.progress(percent_complete + 1, text=progress_text)
 
+        if percent_complete == 90:
+            response = requests.post(url='http://127.0.0.1:8000/mri_app',
+                                     data=json.dumps(inputs))
+
     time.sleep(1)
     my_bar.empty()
+
+    return response
 
 
 st.title('Brain Tumor Detection 🧠')
@@ -33,7 +40,7 @@ st.write("1️⃣ - Voici des images d'IRM")
 
 # Selecting random numbers
 if 'numbers_list' not in st.session_state:
-    X, y = preprocessing.load_data(['Testing'])
+    X, y = load_data(['Testing'])
     st.session_state.X = X
     st.session_state.y = y
     st.session_state.numbers_list = np.random.choice(len(X), size=8, replace=False)
@@ -65,25 +72,17 @@ if submit_button:
     # converting the inputs into a json format
     inputs = {'image': img.tolist()}
 
-    trad = {'no_tumor': 'aucune tumeur',
-            'glioma_tumor': 'glioblastome',
-            'meningioma_tumor': 'méningiome',
-            'pituitary_tumor': 'tumeur pituitaire'}
+    response = progress_bar(inputs)
 
-    response = requests.post(url='http://127.0.0.1:8000/mri_app',
-                             data=json.dumps(inputs))
     if response.status_code == 200:
 
-        progress_bar()  # todo comme en prod, ajouter le chargement du modèle et l'envoi des data et la reception de la reponse dans la progress bar
-        # todo globalement copier les modifs (interessantes à appliquer ici) que j'ai faite pour la prod
-
-        resp = response.text[1:-1]
-        if true_label == resp:
-            st.write(f"L'image a été identifiée par l'IA comme **{trad[resp]}**,"
+        pred_label = response.text[1:-1]
+        if true_label == pred_label:
+            st.write(f"L'image a été identifiée par l'IA comme **{TRANSLATION[pred_label]}**,"
                      f" ce qui est le bon diagnostic ✅")
 
         else:
-            st.write(f"L'image a été identifiée par l'IA comme \"**{trad[resp]}**\", "
-                     f"mais le vrai diagnostic est \"**{trad[true_label]}**\"...")
+            st.write(f"L'image a été identifiée par l'IA comme \"**{TRANSLATION[pred_label]}**\", "
+                     f"mais le vrai diagnostic est \"**{TRANSLATION[true_label]}**\"...")
     else:
         st.subheader(response.text)
