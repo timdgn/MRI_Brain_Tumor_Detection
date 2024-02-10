@@ -1,7 +1,7 @@
 from training import load_last_model
 from preprocessing import load_data
 import numpy as np
-from settings import LABELS
+from settings import *
 
 
 def inference(model, img):

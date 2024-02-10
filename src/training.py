@@ -1,12 +1,10 @@
 import datetime
 import os
-
 import numpy as np
 import tensorflow as tf
 from sklearn.metrics import confusion_matrix, precision_score, f1_score, recall_score
 from matplotlib.ticker import MaxNLocator
 from warnings import filterwarnings
-
 from settings import *
 import preprocessing
 
@@ -50,7 +48,7 @@ def train_model(model, X, y, now):
     model.compile(loss='categorical_crossentropy', optimizer='Adam', metrics=['accuracy'])
 
     # Set up callbacks for TensorBoard, model checkpointing, and learning rate reduction
-    output_dir = os.path.join(os.getcwd(), '..', 'models')
+    output_dir = os.path.join(PROJECT_DIR, 'models')
     filename = f"effnet_{now.strftime('%Y-%m-%d_%H-%M-%S')}.keras"
     checkpoint = tf.keras.callbacks.ModelCheckpoint(os.path.join(output_dir, filename), monitor="val_accuracy", save_best_only=True, mode="auto", verbose=1)
     reduce_lr = tf.keras.callbacks.ReduceLROnPlateau(monitor='val_accuracy', factor=0.3, patience=2, min_delta=0.001, mode='auto',
@@ -115,7 +113,7 @@ def plot_history(history, now):
     plot_history_helper(epochs, history.history['accuracy'], history.history['val_accuracy'], ax[0], 'Accuracy')
     plot_history_helper(epochs, history.history['loss'], history.history['val_loss'], ax[1], 'Loss')
 
-    output_dir = os.path.join(os.getcwd(), '..', 'plots', 'history')
+    output_dir = os.path.join(PROJECT_DIR, 'plots', 'history')
     filename = f"Accuracy_Loss_{now.strftime('%Y-%m-%d_%H-%M-%S')}.png"
     plt.savefig(os.path.join(output_dir, filename), dpi=300)
 
@@ -129,9 +127,8 @@ def load_last_model():
     Returns:
         model: The loaded model.
     """
-    current_dir = os.path.dirname(os.path.abspath(__file__))
-    parent_dir = os.path.dirname(current_dir)
-    models_dir = os.path.join(parent_dir, 'models')
+
+    models_dir = os.path.join(PROJECT_DIR, 'models')
 
     files = os.listdir(models_dir)
     filename = sorted(files)[-1]
@@ -180,7 +177,7 @@ def plot_conf_matrix(y_pred, y_test, now):
     ax.set_title('Heatmap of the Confusion Matrix', size=18, fontweight='bold',
                 color=COLORS_DARK[1])
 
-    output_dir = os.path.join(os.getcwd(), '..', 'plots', 'confusion')
+    output_dir = os.path.join(PROJECT_DIR, 'plots', 'confusion')
     filename = f"Confusion_Matrix_{now.strftime('%Y-%m-%d_%H-%M-%S')}.png"
     plt.savefig(os.path.join(output_dir, filename), dpi=300)
 
@@ -215,7 +212,7 @@ def plot_metrics(y_pred, y_test, now):
     ax.set_title('Metrics', size=18, fontweight='bold', color=COLORS_DARK[1])
     ax.grid(axis='y')
 
-    output_dir = os.path.join(os.getcwd(), '..', 'plots', 'metrics')
+    output_dir = os.path.join(PROJECT_DIR, 'plots', 'metrics')
     filename = f"Metrics_{now.strftime('%Y-%m-%d_%H-%M-%S')}.png"
     plt.savefig(os.path.join(output_dir, filename), dpi=300)
 

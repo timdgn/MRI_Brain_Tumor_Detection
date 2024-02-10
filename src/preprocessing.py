@@ -1,4 +1,3 @@
-import os
 import cv2
 import numpy as np
 import tensorflow as tf
@@ -15,8 +14,7 @@ def load_data(data_sets):
     Parameters
     ----------
     data_sets : list
-        List of data sets to load.
-        E.g. ['Training', 'Testing']
+        List of data sets to load. E.g. ['Training', 'Testing']
 
     Returns
     -------
@@ -24,16 +22,13 @@ def load_data(data_sets):
         y (np.array): Array of corresponding labels.
     """
 
-    current_dir = os.path.dirname(os.path.abspath(__file__))
-    parent_dir = os.path.dirname(current_dir)
-
     X = []
     y = []
 
     # Load training and testing data
     for data_type in data_sets:
         for label in LABELS:
-            folder_path = os.path.join(parent_dir, 'data', data_type, label)
+            folder_path = os.path.join(PROJECT_DIR, 'data', data_type, label)
             for filename in tqdm(sorted(os.listdir(folder_path))):
                 img = cv2.imread(os.path.join(folder_path, filename))
                 img = cv2.resize(img, (IMAGE_SIZE, IMAGE_SIZE))

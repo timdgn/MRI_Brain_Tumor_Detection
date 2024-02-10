@@ -1,5 +1,9 @@
 import matplotlib.pyplot as plt
 import seaborn as sns
+import os
+
+CURRENT_DIR = os.path.dirname(os.path.abspath(__file__))
+PROJECT_DIR = os.path.dirname(CURRENT_DIR)
 
 # Color palette
 COLORS_DARK = ["#1F1F1F", "#313131", '#636363', '#AEAEAE', '#DADADA']
