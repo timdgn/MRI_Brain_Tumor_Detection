@@ -1,10 +1,7 @@
 import datetime
-import os
 import numpy as np
 import tensorflow as tf
 from sklearn.metrics import confusion_matrix, precision_score, f1_score, recall_score
-from matplotlib.ticker import MaxNLocator
-from warnings import filterwarnings
 from settings import *
 import preprocessing
 
@@ -50,9 +47,11 @@ def train_model(model, X, y, now):
     # Set up callbacks for TensorBoard, model checkpointing, and learning rate reduction
     output_dir = os.path.join(PROJECT_DIR, 'models')
     filename = f"effnet_{now.strftime('%Y-%m-%d_%H-%M-%S')}.keras"
-    checkpoint = tf.keras.callbacks.ModelCheckpoint(os.path.join(output_dir, filename), monitor="val_accuracy", save_best_only=True, mode="auto", verbose=1)
-    reduce_lr = tf.keras.callbacks.ReduceLROnPlateau(monitor='val_accuracy', factor=0.3, patience=2, min_delta=0.001, mode='auto',
-                                  verbose=1)
+    checkpoint = tf.keras.callbacks.ModelCheckpoint(os.path.join(output_dir, filename), monitor="val_accuracy",
+                                                    save_best_only=True, mode="auto", verbose=1)
+    reduce_lr = tf.keras.callbacks.ReduceLROnPlateau(monitor='val_accuracy', factor=0.3, patience=2, min_delta=0.001,
+                                                     mode='auto',
+                                                     verbose=1)
 
     # Train the model with the specified data and training parameters
     history = model.fit(X, y, validation_split=0.1, epochs=EPOCHS, verbose=1, batch_size=32,
@@ -63,38 +62,9 @@ def train_model(model, X, y, now):
     return history
 
 
-def plot_history_helper(epochs, metric_train, metric_val, ax, metric_name):
-    """
-    Helper function to plot a given metric (accuracy or loss).
-
-    Parameters:
-        epochs: List of epochs.
-        metric_train: Training metric values.
-        metric_val: Validation metric values.
-        ax: Matplotlib axis object.
-        metric_name: Name of the metric ('Accuracy' or 'Loss').
-
-    Returns:
-        None
-    """
-    ax.plot(epochs, metric_train, marker='o', markerfacecolor=COLORS_GREEN[2], color=COLORS_GREEN[3], label=f'Training {metric_name}')
-    ax.plot(epochs, metric_val, marker='o', markerfacecolor=COLORS_RED[2], color=COLORS_RED[3], label=f'Validation {metric_name}')
-    ax.legend(frameon=False)
-    ax.set_xlabel('Epochs')
-    ax.set_ylabel(metric_name)
-    ax.xaxis.set_major_locator(MaxNLocator(integer=True))
-    ax.grid()
-
-    for i, metric in enumerate(metric_train):
-        ax.annotate(f'{metric:.2f}', (epochs[i], metric), ha='center', va='bottom')
-
-    for i, metric in enumerate(metric_val):
-        ax.annotate(f'{metric:.2f}', (epochs[i], metric), ha='center', va='bottom')
-
-
 def plot_history(history, now):
     """
-    Generate a plot to visualize the training and validation accuracy/loss over epochs.
+    Generate a plot to visualize the training and validation accuracy/loss over epochs and save the plots
 
     Parameters:
         history: A dictionary containing the training and validation accuracy/loss history.
@@ -103,15 +73,48 @@ def plot_history(history, now):
     Returns:
         None
     """
-    filterwarnings('ignore')
 
-    epochs = [i+1 for i in range(EPOCHS)]
-    fig, ax = plt.subplots(1, 2, figsize=(14, 7))
+    # Plot training & validation accuracy values
+    plt.figure(figsize=(12, 4))
+    plt.subplot(1, 2, 1)
+    epochs = range(1, len(history.history['accuracy']) + 1)  # Adjust epochs to start from 1
+    plt.plot(epochs, history.history['accuracy'])
+    plt.plot(epochs, history.history['val_accuracy'])
+    plt.title('Model accuracy')
+    plt.ylabel('Accuracy')
+    plt.xlabel('Epoch')
+    plt.legend(['Train', 'Validation'], loc='upper left')
 
-    fig.suptitle('Epochs vs. Training and Validation Accuracy/Loss', fontsize=18, fontweight='bold', color=COLORS_DARK[1])
+    # Annotate the highest point for accuracy
+    max_acc = max(history.history['accuracy'])
+    max_val_acc = max(history.history['val_accuracy'])
+    plt.annotate(f'Max Train Accuracy: {format(max_acc, ".5f")}',
+                 xy=(history.history['accuracy'].index(max_acc) + 1, max_acc), xytext=(10, 10),
+                 textcoords='offset points', arrowprops=dict(arrowstyle='->'))
+    plt.annotate(f'Max Validation Accuracy: {format(max_val_acc, ".5f")}',
+                 xy=(history.history['val_accuracy'].index(max_val_acc) + 1, max_val_acc), xytext=(10, 10),
+                 textcoords='offset points', arrowprops=dict(arrowstyle='->'))
 
-    plot_history_helper(epochs, history.history['accuracy'], history.history['val_accuracy'], ax[0], 'Accuracy')
-    plot_history_helper(epochs, history.history['loss'], history.history['val_loss'], ax[1], 'Loss')
+    # Plot training & validation loss values
+    plt.subplot(1, 2, 2)
+    plt.plot(epochs, history.history['loss'])
+    plt.plot(epochs, history.history['val_loss'])
+    plt.title('Model loss')
+    plt.ylabel('Loss')
+    plt.xlabel('Epoch')
+    plt.legend(['Train', 'Validation'], loc='upper left')
+
+    # Annotate the lowest point for loss
+    min_loss = min(history.history['loss'])
+    min_val_loss = min(history.history['val_loss'])
+    plt.annotate(f'Min Train Loss: {format(min_loss, ".5f")}',
+                 xy=(history.history['loss'].index(min_loss) + 1, min_loss), xytext=(10, 10),
+                 textcoords='offset points', arrowprops=dict(arrowstyle='->'))
+    plt.annotate(f'Min Validation Loss: {format(min_val_loss, ".5f")}',
+                 xy=(history.history['val_loss'].index(min_val_loss) + 1, min_val_loss), xytext=(10, 10),
+                 textcoords='offset points', arrowprops=dict(arrowstyle='->'))
+
+    plt.tight_layout()
 
     output_dir = os.path.join(PROJECT_DIR, 'plots', 'history')
     filename = f"Accuracy_Loss_{now.strftime('%Y-%m-%d_%H-%M-%S')}.png"
@@ -175,7 +178,7 @@ def plot_conf_matrix(y_pred, y_test, now):
     sns.heatmap(confusion_matrix(y_test, y_pred), ax=ax, xticklabels=LABELS, yticklabels=LABELS, annot=True,
                 cmap=COLORS_GREEN[::-1], alpha=0.7, linewidths=2, linecolor=COLORS_DARK[3])
     ax.set_title('Heatmap of the Confusion Matrix', size=18, fontweight='bold',
-                color=COLORS_DARK[1])
+                 color=COLORS_DARK[1])
 
     output_dir = os.path.join(PROJECT_DIR, 'plots', 'confusion')
     filename = f"Confusion_Matrix_{now.strftime('%Y-%m-%d_%H-%M-%S')}.png"
@@ -243,7 +246,6 @@ def main(X_train, X_test, y_train, y_test):
 
 
 if __name__ == '__main__':
-
     X_train, X_test, y_train, y_test = preprocessing.main()
 
     main(X_train, X_test, y_train, y_test)
