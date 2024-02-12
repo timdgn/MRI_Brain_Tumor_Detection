@@ -90,10 +90,10 @@ def plot_history(history):
     max_acc = max(history.history['accuracy'])
     max_val_acc = max(history.history['val_accuracy'])
     plt.annotate(f'Max Train Accuracy: {format(max_acc, ".3f")}',
-                 xy=(history.history['accuracy'].index(max_acc) + 1, max_acc), xytext=(10, 10),
+                 xy=(history.history['accuracy'].index(max_acc) + 1, max_acc), xytext=(10, -20),
                  textcoords='offset points', arrowprops=dict(arrowstyle='->'))
     plt.annotate(f'Max Validation Accuracy: {format(max_val_acc, ".3f")}',
-                 xy=(history.history['val_accuracy'].index(max_val_acc) + 1, max_val_acc), xytext=(10, 10),
+                 xy=(history.history['val_accuracy'].index(max_val_acc) + 1, max_val_acc), xytext=(10, -20),
                  textcoords='offset points', arrowprops=dict(arrowstyle='->'))
 
     # Plot training & validation loss values
@@ -109,10 +109,10 @@ def plot_history(history):
     min_loss = min(history.history['loss'])
     min_val_loss = min(history.history['val_loss'])
     plt.annotate(f'Min Train Loss: {format(min_loss, ".3f")}',
-                 xy=(history.history['loss'].index(min_loss) + 1, min_loss), xytext=(10, 10),
+                 xy=(history.history['loss'].index(min_loss) + 1, min_loss), xytext=(10, 20),
                  textcoords='offset points', arrowprops=dict(arrowstyle='->'))
     plt.annotate(f'Min Validation Loss: {format(min_val_loss, ".3f")}',
-                 xy=(history.history['val_loss'].index(min_val_loss) + 1, min_val_loss), xytext=(10, 10),
+                 xy=(history.history['val_loss'].index(min_val_loss) + 1, min_val_loss), xytext=(10, 20),
                  textcoords='offset points', arrowprops=dict(arrowstyle='->'))
 
     plt.tight_layout()
