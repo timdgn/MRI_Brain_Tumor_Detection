@@ -29,56 +29,67 @@ def progress_bar(inputs):
     return response
 
 
-st.title('Brain Tumor Detection 🧠')
-st.write('### with a ✨ Deep Learning ✨ algorithm')
-st.write('#')
+def main():
+    """
+    This function contains the main logic for the Brain Tumor Detection application.
+    It displays a title and introductory text, selects random numbers, shows random images,
+    creates a form for user interaction, processes user input, and displays the diagnostic results.
+    """
 
-st.write("Tu vas pouvoir jouer à un petit jeu ! 👇 ")
-st.write("Chaque image présente l'un de ces éléments : Un glioblastome, un méningiome, une tumeur pituitaire ou bien aucune tumeur si le patient est chanceux !")
-st.write("#")
-st.write("1️⃣ - Voici des images d'IRM")
+    # Text
+    st.title('Brain Tumor Detection 🧠')
+    st.write('### with a ✨ Deep Learning ✨ algorithm')
+    st.write('#')
+    st.write("Tu vas pouvoir jouer à un petit jeu ! 👇 ")
+    st.write("Chaque image présente l'un de ces éléments : Un glioblastome, un méningiome, une tumeur pituitaire ou bien aucune tumeur si le patient est chanceux !")
+    st.write("#")
+    st.write("1️⃣ - Voici des images d'IRM")
 
-# Selecting random numbers
-if 'numbers_list' not in st.session_state:
-    X, y = load_data(['Testing'])
-    st.session_state.X = X
-    st.session_state.y = y
-    st.session_state.numbers_list = np.random.choice(len(X), size=8, replace=False)
+    # Selecting random numbers
+    if 'numbers_list' not in st.session_state:
+        st.session_state.X, st.session_state.y = load_data(['Testing'])
+        st.session_state.numbers_list = np.random.choice(len(st.session_state.X), size=8, replace=False)
 
-# Showing random images
-st.image(st.session_state.X[st.session_state.numbers_list], width=150, caption=st.session_state.numbers_list)
-st.write('')
+    # Showing random images
+    st.image(st.session_state.X[st.session_state.numbers_list], width=150, caption=st.session_state.numbers_list)
+    st.write('')
 
-st.write("2️⃣ - Essaye de trouver visuellement une tumeur (s'il y en a une 🔍 )")
-st.write("3️⃣ - Sélectionne le numéro de l'image ici 👇 et clique sur le bouton pour découvrir si tu es meilleur(e) que mon IA 🚀")
-st.write('')
+    # Text
+    st.write("2️⃣ - Essaye de trouver visuellement une tumeur (s'il y en a une 🔍 )")
+    st.write("3️⃣ - Sélectionne le numéro de l'image ici 👇 et clique sur le bouton pour découvrir si tu es meilleur(e) que mon IA 🚀")
+    st.write('')
 
-# Creating the form
-with st.form('my_form'):
-    chosen_number = st.selectbox('Choisis un numéro', st.session_state.numbers_list, label_visibility='collapsed')
-    submit_button = st.form_submit_button(label='Diagnostic 👨‍⚕️')
-st.write('')
+    # Creating the form
+    with st.form('my_form'):
+        chosen_number = st.selectbox('Choisis un numéro', st.session_state.numbers_list, label_visibility='collapsed')
+        submit_button = st.form_submit_button(label='Diagnostic 👨‍⚕️')
+    st.write('')
 
-if submit_button:
+    if submit_button:
 
-    # Selecting the image
-    img = st.session_state.X[chosen_number]
-    true_label = st.session_state.y[chosen_number]
+        # Selecting the image
+        img = st.session_state.X[chosen_number]
+        true_label = st.session_state.y[chosen_number]
 
-    # converting the inputs into a json format
-    inputs = {'image': img.tolist()}
+        # converting the inputs into a json format
+        inputs = {'image': img.tolist()}
 
-    response = progress_bar(inputs)
+        response = progress_bar(inputs)
 
-    if response.status_code == 200:
+        if response.status_code == 200:
 
-        pred_label = response.text[1:-1]
-        if true_label == pred_label:
-            st.write(f"L'image {chosen_number} a été identifiée par l'IA comme **{TRANSLATION[pred_label]}**,"
-                     f" ce qui est le bon diagnostic ✅")
+            pred_label = response.text[1:-1]
+            if true_label == pred_label:
+                st.write(f"L'image {chosen_number} a été identifiée par l'IA comme **{TRANSLATION[pred_label]}**,"
+                         f" ce qui est le bon diagnostic ✅")
 
+            else:
+                st.write(f"L'image {chosen_number} a été identifiée par l'IA comme \"**{TRANSLATION[pred_label]}**\", "
+                         f"mais le vrai diagnostic est \"**{TRANSLATION[true_label]}**\"...")
         else:
-            st.write(f"L'image {chosen_number} a été identifiée par l'IA comme \"**{TRANSLATION[pred_label]}**\", "
-                     f"mais le vrai diagnostic est \"**{TRANSLATION[true_label]}**\"...")
-    else:
-        st.subheader(response.text)
+            st.subheader(response.text)
+
+
+if __name__ == '__main__':
+
+    main()
