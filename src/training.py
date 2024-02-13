@@ -81,7 +81,7 @@ def plot_history(history):
     epochs = range(1, len(history.history['accuracy']) + 1)  # Adjust epochs to start from 1
     plt.plot(epochs, history.history['accuracy'])
     plt.plot(epochs, history.history['val_accuracy'])
-    plt.title('Model accuracy')
+    plt.title('Model accuracy', size=18, fontweight='bold')
     plt.ylabel('Accuracy')
     plt.xlabel('Epoch')
     plt.legend(['Train', 'Validation'], loc='upper left')
@@ -100,7 +100,7 @@ def plot_history(history):
     plt.subplot(1, 2, 2)
     plt.plot(epochs, history.history['loss'])
     plt.plot(epochs, history.history['val_loss'])
-    plt.title('Model loss')
+    plt.title('Model loss', size=18, fontweight='bold')
     plt.ylabel('Loss')
     plt.xlabel('Epoch')
     plt.legend(['Train', 'Validation'], loc='upper left')
@@ -180,7 +180,8 @@ def plot_conf_matrix(y_pred, y_test):
     # Plot confusion matrix heatmap
     plt.figure(figsize=(10, 8))
     sns.set(font_scale=1.2)
-    sns.heatmap(cm, annot=True, alpha=0.7, linewidths=2, xticklabels=LABELS, yticklabels=LABELS)
+    sns.heatmap(cm, annot=True, alpha=0.7, linewidths=2, xticklabels=LABELS, yticklabels=LABELS,
+                cmap="flare")
     plt.xlabel('Predicted labels')
     plt.ylabel('True labels')
     plt.title('Heatmap of the Confusion Matrix', fontsize=18, fontweight='bold')
