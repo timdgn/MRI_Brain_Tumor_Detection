@@ -59,10 +59,6 @@ with st.form('my_form'):
     submit_button = st.form_submit_button(label='Diagnostic 👨‍⚕️')
 st.write('')
 
-# Debug weird diagnostic
-# weird_number = [1616]
-# st.image(st.session_state.X[weird_number], width=150, caption=st.session_state.y[weird_number])
-
 if submit_button:
 
     # Selecting the image
@@ -78,11 +74,11 @@ if submit_button:
 
         pred_label = response.text[1:-1]
         if true_label == pred_label:
-            st.write(f"L'image a été identifiée par l'IA comme **{TRANSLATION[pred_label]}**,"
+            st.write(f"L'image {chosen_number} a été identifiée par l'IA comme **{TRANSLATION[pred_label]}**,"
                      f" ce qui est le bon diagnostic ✅")
 
         else:
-            st.write(f"L'image a été identifiée par l'IA comme \"**{TRANSLATION[pred_label]}**\", "
+            st.write(f"L'image {chosen_number} a été identifiée par l'IA comme \"**{TRANSLATION[pred_label]}**\", "
                      f"mais le vrai diagnostic est \"**{TRANSLATION[true_label]}**\"...")
     else:
         st.subheader(response.text)
