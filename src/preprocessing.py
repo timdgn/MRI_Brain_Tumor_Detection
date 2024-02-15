@@ -55,10 +55,13 @@ def split_data(X, y):
         X = X[:IMG_LIMIT]
         y = y[:IMG_LIMIT]
 
-    return train_test_split(X, y, test_size=0.1)
+    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.1)
+    X_train, X_val, y_train, y_val = train_test_split(X_train, y_train, test_size=0.1)
+
+    return X_train, X_val, X_test, y_train, y_val, y_test
 
 
-def one_hot(y_train, y_test):
+def one_hot(y_train, y_val, y_test):
     """
     Converts labels to one-hot encoded vectors.
 
@@ -71,41 +74,45 @@ def one_hot(y_train, y_test):
 
     # Convert labels to their corresponding indices in LABELS list
     y_train_indices = [LABELS.index(i) for i in y_train]
+    y_val_indices = [LABELS.index(i) for i in y_val]
     y_test_indices = [LABELS.index(i) for i in y_test]
 
     # Convert indices to one-hot encoded vectors
     y_train_encoded = tf.keras.utils.to_categorical(y_train_indices)
+    y_val_encoded = tf.keras.utils.to_categorical(y_val_indices)
     y_test_encoded = tf.keras.utils.to_categorical(y_test_indices)
 
-    return y_train_encoded, y_test_encoded
+    return y_train_encoded, y_val_encoded, y_test_encoded
 
 
 def main():
     """
-    This function loads the data, splits it into training and testing sets,
+    This function loads the data, splits it into training, validation, and testing sets,
     and performs one-hot encoding on the target labels.
 
     Returns:
         X_train (array-like): Training data features
+        X_val (array-like): Validation data features
         X_test (array-like): Testing data features
         y_train (array-like): One-hot encoded training target labels
+        y_val (array-like): One-hot encoded validation target labels
         y_test (array-like): One-hot encoded testing target labels
     """
 
     print('Starting preprocessing...')
 
     X, y = load_data(['Training', 'Testing'])
-    X_train, X_test, y_train, y_test = split_data(X, y)
-    y_train, y_test = one_hot(y_train, y_test)
+    X_train, X_val, X_test, y_train, y_val, y_test = split_data(X, y)
+    y_train, y_val, y_test = one_hot(y_train, y_val, y_test)
 
     print('Preprocessing done !', end='\n\n')
 
-    return X_train, X_test, y_train, y_test
+    return X_train, X_val, X_test, y_train, y_val, y_test
 
 
 if __name__ == '__main__':
 
-    X_train, X_test, y_train, y_test = main()
+    X_train, X_val, X_test, y_train, y_val, y_test = main()
 
     print('finished')
 
