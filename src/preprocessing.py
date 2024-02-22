@@ -4,6 +4,7 @@ import tensorflow as tf
 from tqdm import tqdm
 from sklearn.model_selection import train_test_split
 from sklearn.utils import shuffle
+
 from settings import *
 
 
@@ -11,13 +12,10 @@ def load_data(data_sets):
     """
     Load and preprocess image data for training and testing.
 
-    Parameters
-    ----------
-    data_sets : list
-        List of data sets to load. E.g. ['Training', 'Testing']
+    Parameters:
+        data_sets (list): List of data sets to load. E.g. ['Training', 'Testing']
 
     Returns
-    -------
         X (np.array): Array of preprocessed images.
         y (np.array): Array of corresponding labels.
     """
@@ -45,6 +43,7 @@ def split_data(X, y):
     Parameters:
         X (array-like): The input features.
         y (array-like): The target variable.
+
     Returns:
         tuple: A tuple containing the training and test sets for X and y.
     """
@@ -72,6 +71,7 @@ def one_hot(y_train, y_val, y_test):
     Parameters:
         y_train (List[str]): The training labels.
         y_test (List[str]): The testing labels.
+
     Returns:
         Tuple[np.ndarray, np.ndarray]: The one-hot encoded vectors for the training and testing labels.
     """

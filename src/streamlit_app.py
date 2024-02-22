@@ -3,13 +3,15 @@ import requests
 import json
 import numpy as np
 import streamlit as st
+
 from preprocessing import load_data
 from settings import TRANSLATION
 
 
 def progress_bar(inputs):
     """
-    Function to display a progress bar and update it until completion.
+    A function to display a progress bar while analyzing an image,
+    and then send the inputs to a specified URL and return the response.
     """
 
     progress_text = "Analyse de l'image par IA en cours..."

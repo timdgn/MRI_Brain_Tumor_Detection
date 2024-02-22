@@ -1,7 +1,8 @@
+import numpy as np
+
+from settings import *
 from training import load_last_model
 from preprocessing import load_data
-import numpy as np
-from settings import *
 
 
 def inference(model, img):
@@ -23,7 +24,6 @@ def inference(model, img):
 
 
 if __name__ == "__main__":
-
     X, y = load_data(['Training', 'Testing'])
     img = X[37]
     img = np.expand_dims(img, axis=0)

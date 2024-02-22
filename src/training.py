@@ -91,16 +91,16 @@ def plot_history(history):
     plt.title('Model F1 Score', size=18, fontweight='bold')
     plt.ylabel('F1 Score')
     plt.xlabel('Epoch')
-    plt.legend(['Train', 'Validation'], loc='upper left')
+    plt.legend(['Train', 'Validation'], loc='lower right')
 
     # Annotate the highest point for F1 Score
     max_f1 = max(history.history['f1'])
     max_val_f1 = max(history.history['val_f1'])
     plt.annotate(f'Max Train F1 Score: {format(max_f1, ".3f")}\n(Epoch {history.history["f1"].index(max_f1) + 1})',
-                 xy=(history.history['f1'].index(max_f1) + 1, max_f1), xytext=(10, -40),
+                 xy=(history.history['f1'].index(max_f1) + 1, max_f1), xytext=(10, -60),
                  textcoords='offset points', arrowprops=dict(arrowstyle='->'))
     plt.annotate(f'Max Validation F1 Score: {format(max_val_f1, ".3f")}\n(Epoch {history.history["val_f1"].index(max_val_f1) + 1})',
-                 xy=(history.history['val_f1'].index(max_val_f1) + 1, max_val_f1), xytext=(10, -40),
+                 xy=(history.history['val_f1'].index(max_val_f1) + 1, max_val_f1), xytext=(10, -80),
                  textcoords='offset points', arrowprops=dict(arrowstyle='->'))
 
     # Plot training & validation loss values
@@ -110,16 +110,16 @@ def plot_history(history):
     plt.title('Model Loss', size=18, fontweight='bold')
     plt.ylabel('Loss')
     plt.xlabel('Epoch')
-    plt.legend(['Train', 'Validation'], loc='upper left')
+    plt.legend(['Train', 'Validation'], loc='upper right')
 
     # Annotate the lowest point for loss
     min_loss = min(history.history['loss'])
     min_val_loss = min(history.history['val_loss'])
     plt.annotate(f'Min Train Loss: {format(min_loss, ".3f")}\n(Epoch {history.history["loss"].index(min_loss) + 1})',
-                 xy=(history.history['loss'].index(min_loss) + 1, min_loss), xytext=(10, 20),
+                 xy=(history.history['loss'].index(min_loss) + 1, min_loss), xytext=(10, 40),
                  textcoords='offset points', arrowprops=dict(arrowstyle='->'))
     plt.annotate(f'Min Validation Loss: {format(min_val_loss, ".3f")}\n(Epoch {history.history["val_loss"].index(min_val_loss) + 1})',
-                 xy=(history.history['val_loss'].index(min_val_loss) + 1, min_val_loss), xytext=(10, 20),
+                 xy=(history.history['val_loss'].index(min_val_loss) + 1, min_val_loss), xytext=(10, 60),
                  textcoords='offset points', arrowprops=dict(arrowstyle='->'))
 
     plt.tight_layout()
@@ -207,6 +207,7 @@ def plot_metrics(y_pred, y_test):
     Parameters:
         y_pred (array-like): An array or a list-like object containing the predicted labels.
         y_test (array-like): An array or a list-like object containing the actual labels.
+
     Returns:
         None
     """
@@ -246,6 +247,9 @@ def main(X_train, X_val, X_test, y_train, y_val, y_test):
         y_train (numpy.ndarray): Training data labels.
         y_val (numpy.ndarray): Validation data labels.
         y_test (numpy.ndarray): Test data labels.
+
+    Returns:
+        None
     """
 
     model = create_model()
