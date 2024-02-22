@@ -37,6 +37,6 @@ Follow the 3 numbered steps to test your tumor diagnostic skills and my AI model
 ## ML model's performances
 I use Keras's checkpoint callback to ensure the model saved is the one with the highest validation accuracy.
 
-![Training history](plots/history/Accuracy_Loss.png)
+![Training history](plots/history/History.png)
 ![Confusion_matrix](plots/confusion/Confusion_Matrix.png)
 ![Evalutaion metrics](plots/metrics/Metrics.png)
