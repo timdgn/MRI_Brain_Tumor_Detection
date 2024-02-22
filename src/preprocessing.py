@@ -58,6 +58,10 @@ def split_data(X, y):
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.1)
     X_train, X_val, y_train, y_val = train_test_split(X_train, y_train, test_size=0.1)
 
+    print('Number of training images:', len(X_train))
+    print('Number of validation images:', len(X_val))
+    print('Number of testing images:', len(X_test))
+
     return X_train, X_val, X_test, y_train, y_val, y_test
 
 
