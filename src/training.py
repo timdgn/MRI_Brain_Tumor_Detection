@@ -48,18 +48,18 @@ def train_model(model, X_train, X_val, y_train, y_val):
     # Compile the model with the specified loss, optimizer, and metrics
     model.compile(loss='categorical_crossentropy',
                   optimizer='Adam',
-                  metrics=['accuracy', tf.keras.metrics.F1Score(average='macro', name='f1_score_macro')])
+                  metrics=['accuracy',
+                           tf.keras.metrics.F1Score(average='macro', threshold=None, name='f1', dtype=None)])
 
-    # Set up callbacks for TensorBoard, model checkpointing, learning rate reduction, and F1 score
     now = datetime.datetime.now()
     output_dir = os.path.join(PROJECT_DIR, 'models')
     filename = f"effnet_{now.strftime('%Y-%m-%d_%H-%M-%S')}.keras"
 
-    # Setting up callbacks
-    checkpoint = tf.keras.callbacks.ModelCheckpoint(os.path.join(output_dir, filename), monitor="f1_score_macro",
-                                                    save_best_only=True, mode="auto", verbose=1)
-    reduce_lr = tf.keras.callbacks.ReduceLROnPlateau(monitor='f1_score_macro', factor=0.3, patience=2, min_delta=0.001,
-                                                     mode='auto', verbose=1)
+    # Setting up callbacks model checkpointing, learning rate reduction, and F1 score
+    checkpoint = tf.keras.callbacks.ModelCheckpoint(os.path.join(output_dir, f"{filename}"), monitor="val_f1",
+                                                    save_best_only=True, mode='max', verbose=1)
+    reduce_lr = tf.keras.callbacks.ReduceLROnPlateau(monitor='val_f1', factor=0.3, patience=2, min_delta=0.001,
+                                                     mode='max', verbose=1)
 
     # Train the model with the specified data and training parameters
     history = model.fit(X_train, y_train, validation_data=(X_val, y_val), epochs=EPOCHS, verbose=1, batch_size=32,
@@ -72,41 +72,42 @@ def train_model(model, X_train, X_val, y_train, y_val):
 
 def plot_history(history):
     """
-    Generate a plot to visualize the training and validation accuracy/loss over epochs and save the plots
+    Generate a plot to visualize the training and validation F1 Score/loss over epochs and save the plots
 
     Parameters:
-        history: A dictionary containing the training and validation accuracy/loss history.
+        history: A dictionary containing the training and validation F1 Score/loss history.
 
     Returns:
         None
     """
 
-    # Plot training & validation accuracy values
+    epochs = [ep + 1 for ep in history.epoch]
     plt.figure(figsize=(12, 4))
+
+    # Plot training & validation f1 values
     plt.subplot(1, 2, 1)
-    epochs = range(1, len(history.history['accuracy']) + 1)  # Adjust epochs to start from 1
-    plt.plot(epochs, history.history['accuracy'])
-    plt.plot(epochs, history.history['val_accuracy'])
-    plt.title('Model accuracy', size=18, fontweight='bold')
-    plt.ylabel('Accuracy')
+    plt.plot(epochs, history.history['f1'])
+    plt.plot(epochs, history.history['val_f1'])
+    plt.title('Model F1 Score', size=18, fontweight='bold')
+    plt.ylabel('F1 Score')
     plt.xlabel('Epoch')
     plt.legend(['Train', 'Validation'], loc='upper left')
 
-    # Annotate the highest point for accuracy
-    max_acc = max(history.history['accuracy'])
-    max_val_acc = max(history.history['val_accuracy'])
-    plt.annotate(f'Max Train Accuracy: {format(max_acc, ".3f")}',
-                 xy=(history.history['accuracy'].index(max_acc) + 1, max_acc), xytext=(10, -20),
+    # Annotate the highest point for F1 Score
+    max_f1 = max(history.history['f1'])
+    max_val_f1 = max(history.history['val_f1'])
+    plt.annotate(f'Max Train F1 Score: {format(max_f1, ".3f")}\n(Epoch {history.history["f1"].index(max_f1) + 1})',
+                 xy=(history.history['f1'].index(max_f1) + 1, max_f1), xytext=(10, -40),
                  textcoords='offset points', arrowprops=dict(arrowstyle='->'))
-    plt.annotate(f'Max Validation Accuracy: {format(max_val_acc, ".3f")}',
-                 xy=(history.history['val_accuracy'].index(max_val_acc) + 1, max_val_acc), xytext=(10, -20),
+    plt.annotate(f'Max Validation F1 Score: {format(max_val_f1, ".3f")}\n(Epoch {history.history["val_f1"].index(max_val_f1) + 1})',
+                 xy=(history.history['val_f1'].index(max_val_f1) + 1, max_val_f1), xytext=(10, -40),
                  textcoords='offset points', arrowprops=dict(arrowstyle='->'))
 
     # Plot training & validation loss values
     plt.subplot(1, 2, 2)
     plt.plot(epochs, history.history['loss'])
     plt.plot(epochs, history.history['val_loss'])
-    plt.title('Model loss', size=18, fontweight='bold')
+    plt.title('Model Loss', size=18, fontweight='bold')
     plt.ylabel('Loss')
     plt.xlabel('Epoch')
     plt.legend(['Train', 'Validation'], loc='upper left')
@@ -114,17 +115,17 @@ def plot_history(history):
     # Annotate the lowest point for loss
     min_loss = min(history.history['loss'])
     min_val_loss = min(history.history['val_loss'])
-    plt.annotate(f'Min Train Loss: {format(min_loss, ".3f")}',
+    plt.annotate(f'Min Train Loss: {format(min_loss, ".3f")}\n(Epoch {history.history["loss"].index(min_loss) + 1})',
                  xy=(history.history['loss'].index(min_loss) + 1, min_loss), xytext=(10, 20),
                  textcoords='offset points', arrowprops=dict(arrowstyle='->'))
-    plt.annotate(f'Min Validation Loss: {format(min_val_loss, ".3f")}',
+    plt.annotate(f'Min Validation Loss: {format(min_val_loss, ".3f")}\n(Epoch {history.history["val_loss"].index(min_val_loss) + 1})',
                  xy=(history.history['val_loss'].index(min_val_loss) + 1, min_val_loss), xytext=(10, 20),
                  textcoords='offset points', arrowprops=dict(arrowstyle='->'))
 
     plt.tight_layout()
 
     output_dir = os.path.join(PROJECT_DIR, 'plots', 'history')
-    filename = f"Accuracy_Loss.png"
+    filename = f'History.png'
     plt.savefig(os.path.join(output_dir, filename), dpi=300)
 
     plt.show()
@@ -187,13 +188,13 @@ def plot_conf_matrix(y_pred, y_test):
     plt.figure(figsize=(10, 8))
     sns.set(font_scale=1.2)
     sns.heatmap(cm, annot=True, alpha=0.7, linewidths=2, xticklabels=LABELS, yticklabels=LABELS,
-                cmap="flare")
+                cmap='flare')
     plt.xlabel('Predicted labels')
     plt.ylabel('True labels')
     plt.title('Heatmap of the Confusion Matrix', fontsize=18, fontweight='bold')
 
     output_dir = os.path.join(PROJECT_DIR, 'plots', 'confusion')
-    filename = f"Confusion_Matrix.png"
+    filename = f'Confusion_Matrix.png'
     plt.savefig(os.path.join(output_dir, filename), dpi=300)
 
     plt.show()
@@ -218,7 +219,7 @@ def plot_metrics(y_pred, y_test):
 
     fig, ax = plt.subplots(figsize=(5, 7))
     ax.vlines(x=list(metrics.keys()), ymin=0, ymax=list(metrics.values()), alpha=0.7)
-    ax.plot(list(metrics.keys()), list(metrics.values()), "o")
+    ax.plot(list(metrics.keys()), list(metrics.values()), 'o')
 
     for i, metric in enumerate(metrics.keys()):
         ax.text(i, metrics[metric], f'{metrics[metric]:.2f}', ha='center', va='bottom')
@@ -227,7 +228,7 @@ def plot_metrics(y_pred, y_test):
     ax.grid(axis='y')
 
     output_dir = os.path.join(PROJECT_DIR, 'plots', 'metrics')
-    filename = f"Metrics.png"
+    filename = f'Metrics.png'
     plt.savefig(os.path.join(output_dir, filename), dpi=300)
 
     plt.show()
