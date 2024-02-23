@@ -32,10 +32,10 @@ To install and run this project on your local machine, follow these steps :
 8. Enjoy ✨
 
 ## Usage
-Follow the 3 numbered steps to test your tumor diagnostic skills and my AI model's 😉
+Follow the 3 numbered steps on the deployed web app to test your tumor diagnostic skills and my AI model's 😉
 
 ## ML model's performances
-I use Keras's checkpoint callback to ensure the model saved is the one with the highest validation accuracy.
+I use Keras's checkpoint callback to ensure the model saved is the one with the highest validation macro F1 score.
 
 ![Training history](plots/history/History.png)
 ![Confusion_matrix](plots/confusion/Confusion_Matrix.png)
