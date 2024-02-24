@@ -1,3 +1,4 @@
+import os
 import time
 import requests
 import json
@@ -5,7 +6,7 @@ import numpy as np
 import streamlit as st
 
 from preprocessing import load_data
-from settings import TRANSLATION
+from settings import PROJECT_DIR, TRANSLATION
 
 
 def progress_bar(inputs):
@@ -29,6 +30,25 @@ def progress_bar(inputs):
     my_bar.empty()
 
     return response
+
+
+def infos():
+    """
+    Function to retrieve the latest model version from the specified directory.
+    """
+
+    models_dir = os.path.join(PROJECT_DIR, 'models')
+    files = os.listdir(models_dir)
+    last_model_filename = sorted(files)[-1]
+
+    st.write("#")
+    st.write("#")
+    st.write("#")
+
+    st.caption(f'By Timmothy Dangeon, PharmD & Machine Learning Engineer')
+    st.caption('Linkedin : linkedin.com/in/timdangeon')
+    st.caption('Github : github.com/timdgn')
+    st.caption(f'Model version : {last_model_filename[7:-6]}')
 
 
 def main():
@@ -90,6 +110,8 @@ def main():
                          f"mais le vrai diagnostic est \"**{TRANSLATION[true_label]}**\"...")
         else:
             st.subheader(response.text)
+
+    infos()
 
 
 if __name__ == '__main__':
