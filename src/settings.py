@@ -23,3 +23,6 @@ IMG_LIMIT = None
 
 # Epochs. Should be around 20
 EPOCHS = 20
+
+# Batch size.
+BATCH_SIZE = 32

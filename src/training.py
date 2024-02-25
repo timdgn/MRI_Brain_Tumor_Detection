@@ -62,8 +62,8 @@ def train_model(model, X_train, X_val, y_train, y_val):
                                                      mode='max', verbose=1)
 
     # Train the model with the specified data and training parameters
-    history = model.fit(X_train, y_train, validation_data=(X_val, y_val), epochs=EPOCHS, verbose=1, batch_size=32,
-                        callbacks=[checkpoint, reduce_lr])
+    history = model.fit(X_train, y_train, validation_data=(X_val, y_val), epochs=EPOCHS, verbose=1,
+                        batch_size=BATCH_SIZE, callbacks=[checkpoint, reduce_lr])
 
     print('Training done...', end='\n\n')
 
@@ -187,7 +187,7 @@ def plot_conf_matrix(y_pred, y_test):
     # Plot confusion matrix heatmap
     plt.figure(figsize=(10, 8))
     sns.set(font_scale=1.2)
-    sns.heatmap(cm, annot=True, alpha=0.7, linewidths=2, xticklabels=LABELS, yticklabels=LABELS,
+    sns.heatmap(cm, annot=True, fmt='d', alpha=0.7, linewidths=2, xticklabels=LABELS, yticklabels=LABELS,
                 cmap='flare')
     plt.xlabel('Predicted labels')
     plt.ylabel('True labels')
