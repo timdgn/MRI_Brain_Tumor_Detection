@@ -191,7 +191,7 @@ def plot_conf_matrix(y_pred, y_test):
                 cmap='flare')
     plt.xlabel('Predicted labels')
     plt.ylabel('True labels')
-    plt.title('Heatmap of the Confusion Matrix', fontsize=18, fontweight='bold')
+    plt.title('Heatmap of the Test dataset Confusion Matrix', fontsize=18, fontweight='bold')
 
     output_dir = os.path.join(PROJECT_DIR, 'plots', 'confusion')
     filename = f'Confusion_Matrix.png'
@@ -225,7 +225,7 @@ def plot_metrics(y_pred, y_test):
     for i, metric in enumerate(metrics.keys()):
         ax.text(i, metrics[metric], f'{metrics[metric]:.2f}', ha='center', va='bottom')
 
-    ax.set_title('Metrics', size=18, fontweight='bold')
+    ax.set_title('Test dataset metrics', size=18, fontweight='bold')
     ax.grid(axis='y')
 
     output_dir = os.path.join(PROJECT_DIR, 'plots', 'metrics')
