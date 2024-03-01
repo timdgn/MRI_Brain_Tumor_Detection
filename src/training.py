@@ -62,10 +62,10 @@ def train_model(model, X_train, X_val, y_train, y_val):
                                                      mode='max', verbose=1)
 
     # Train the model with the specified data and training parameters
-    history = model.fit(X_train, y_train, validation_data=(X_val, y_val), epochs=EPOCHS, verbose=1,
-                        batch_size=BATCH_SIZE, callbacks=[checkpoint, reduce_lr])
+    history = model.fit(X_train, y_train, validation_data=(X_val, y_val), epochs=EPOCHS, batch_size=BATCH_SIZE,
+                        verbose=1, callbacks=[checkpoint, reduce_lr])
 
-    print('Training done...', end='\n\n')
+    print('Training done !', end='\n\n')
 
     return model, history
 
