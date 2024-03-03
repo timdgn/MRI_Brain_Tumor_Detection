@@ -1,4 +1,6 @@
 import datetime
+import time
+
 import numpy as np
 import tensorflow as tf
 from sklearn.metrics import confusion_matrix, precision_score, f1_score, recall_score
@@ -7,6 +9,22 @@ import matplotlib.pyplot as plt
 
 from settings import *
 import preprocessing
+
+
+def get_available_devices():
+    """
+    Get information about available devices.
+
+    Parameters:
+        None
+
+    Returns:
+        None
+    """
+
+    print("Number of CPU/GPU Available: ", len(tf.config.list_physical_devices()))
+    print("CPU: ", tf.config.list_physical_devices('CPU'))
+    print("GPU: ", tf.config.list_physical_devices('GPU'))
 
 
 def create_model():
@@ -252,6 +270,8 @@ def main(X_train, X_val, X_test, y_train, y_val, y_test):
         None
     """
 
+    get_available_devices()
+
     model = create_model()
     model, history = train_model(model, X_train, X_val, y_train, y_val)
     plot_history(history)
@@ -264,4 +284,9 @@ def main(X_train, X_val, X_test, y_train, y_val, y_test):
 if __name__ == '__main__':
     X_train, X_val, X_test, y_train, y_val, y_test = preprocessing.main()
 
+    start_time = time.time()
     main(X_train, X_val, X_test, y_train, y_val, y_test)
+    time_taken = time.time() - start_time
+
+    # Print seconds and minutes taken with an f-string
+    print(f'--- Time taken: {time_taken:.2f} seconds ({time_taken / 60:.2f} minutes) ---')
