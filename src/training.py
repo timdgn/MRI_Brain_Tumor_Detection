@@ -69,6 +69,8 @@ def train_model(model, X_train, X_val, y_train, y_val):
                   metrics=['accuracy',
                            tf.keras.metrics.F1Score(average='macro', threshold=None, name='f1', dtype=None)])
 
+    model.summary()
+
     now = datetime.datetime.now()
     output_dir = os.path.join(PROJECT_DIR, 'models')
     filename = f"effnet_{now.strftime('%Y-%m-%d_%H-%M-%S')}.keras"
