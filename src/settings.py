@@ -4,13 +4,13 @@ CURRENT_DIR = os.path.dirname(os.path.abspath(__file__))
 PROJECT_DIR = os.path.dirname(CURRENT_DIR)
 
 # Tumor labels
-LABELS = ['glioma_tumor', 'meningioma_tumor', 'pituitary_tumor', 'no_tumor']
+LABELS = ['glioma', 'meningioma', 'pituitary', 'notumor']
 
 # French translation of the labels
-TRANSLATION = {'glioma_tumor': 'glioblastome',
-               'meningioma_tumor': 'méningiome',
-               'pituitary_tumor': 'tumeur pituitaire',
-               'no_tumor': 'aucune tumeur'}
+TRANSLATION = {'glioma': 'glioblastome',
+               'meningioma': 'méningiome',
+               'pituitary': 'tumeur pituitaire',
+               'notumor': 'aucune tumeur'}
 
 # Image size (pixels).
 # Should not be too large, to avoid a long training time.
