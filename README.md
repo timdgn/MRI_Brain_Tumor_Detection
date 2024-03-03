@@ -4,15 +4,15 @@
 ![preview](docs/Preview.png)
 
 ## Description
-This is a personal project in which I build a classification solution to detect brain tumors through MRI.
+This is a personal project in which I build a classification solution to detect brain tumors through T1-weighted MRI.
 The goal is to predict whether a patient has a brain tumor (glioma tumor, meningioma tumor, pituitary tumor) or not based on their brain MRI images 🩻
 
 I had the idea of this project thanks to my current job in neuroimaging research.
-The MRI images come from [here](https://github.com/sartajbhuvaji/brain-tumor-classification-dataset).
+The 7023 MRI images come from [this](https://www.kaggle.com/datasets/masoudnickparvar/brain-tumor-mri-dataset/data) dataset.
 
-To avoid training a heavy a classification model from scratch, I use the EfficientNetB0 model.
+To avoid training a heavy classification model from scratch, I use the EfficientNetV2B0 model.
 It's a lightweight and very efficient model on imagenet and image classification transfer learning tasks.
-Information about the model can be found [here](https://keras.io/examples/vision/image_classification_efficientnet_fine_tuning/). 
+Information about the model can be found [here](https://keras.io/api/keras_cv/models/backbones/efficientnetv2/). 
 
 ## Table of Contents
 - [Local installation](#local-installation)

@@ -37,7 +37,7 @@ def create_model():
 
     # Create EfficientNetB0 model with pre-trained weights
     effnet = tf.keras.applications.EfficientNetV2B0(weights='imagenet', include_top=False,
-                                                  input_shape=(IMAGE_SIZE, IMAGE_SIZE, 3))
+                                                    input_shape=(IMAGE_SIZE, IMAGE_SIZE, 3))
     model = tf.keras.layers.GlobalAveragePooling2D()(effnet.output)
     model = tf.keras.layers.Dropout(rate=0.5)(model)
     model = tf.keras.layers.Dense(4, activation='softmax')(model)
@@ -243,7 +243,7 @@ def plot_metrics(y_pred, y_test):
     ax.plot(list(metrics.keys()), list(metrics.values()), 'o')
 
     for i, metric in enumerate(metrics.keys()):
-        ax.text(i, metrics[metric], f'{metrics[metric]:.2f}', ha='center', va='bottom')
+        ax.text(i, metrics[metric], f'{metrics[metric]:.3f}', ha='center', va='bottom')
 
     ax.set_title('Test dataset metrics', size=18, fontweight='bold')
     ax.grid(axis='y')
