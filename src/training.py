@@ -36,7 +36,7 @@ def create_model():
     """
 
     # Create EfficientNetB0 model with pre-trained weights
-    effnet = tf.keras.applications.EfficientNetB0(weights='imagenet', include_top=False,
+    effnet = tf.keras.applications.EfficientNetV2B0(weights='imagenet', include_top=False,
                                                   input_shape=(IMAGE_SIZE, IMAGE_SIZE, 3))
     model = tf.keras.layers.GlobalAveragePooling2D()(effnet.output)
     model = tf.keras.layers.Dropout(rate=0.5)(model)
