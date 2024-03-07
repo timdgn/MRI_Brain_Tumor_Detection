@@ -4,6 +4,8 @@ import tensorflow as tf
 from tqdm import tqdm
 from sklearn.model_selection import train_test_split
 from sklearn.utils import shuffle
+import imutils
+from pathlib import Path
 
 from settings import *
 
@@ -26,10 +28,9 @@ def load_data(data_sets):
     # Load training and testing data
     for data_type in data_sets:
         for label in LABELS:
-            folder_path = os.path.join(PROJECT_DIR, 'data', data_type, label)
+            folder_path = os.path.join(PROJECT_DIR, 'data', 'processed', data_type, label)
             for filename in tqdm(sorted(os.listdir(folder_path))):
                 img = cv2.imread(os.path.join(folder_path, filename))
-                img = cv2.resize(img, (IMAGE_SIZE, IMAGE_SIZE))
                 X.append(img)
                 y.append(label)
 
@@ -91,7 +92,7 @@ def one_hot(y_train, y_val, y_test):
     return y_train_encoded, y_val_encoded, y_test_encoded
 
 
-def main():
+def preprocessing():
     """
     This function loads the data, splits it into training, validation, and testing sets,
     and performs one-hot encoding on the target labels.
@@ -116,9 +117,76 @@ def main():
     return X_train, X_val, X_test, y_train, y_val, y_test
 
 
-if __name__ == '__main__':
+def crop_img(img):
+    """
+    Function to crop an image based on its extreme points.
 
-    X_train, X_val, X_test, y_train, y_val, y_test = main()
+    Parameters:
+        img: input image to be cropped
 
-    print('finished')
+    Returns:
+        new_img: cropped image based on extreme points
+    """
 
+    gray = cv2.cvtColor(img, cv2.COLOR_RGB2GRAY)
+    gray = cv2.GaussianBlur(gray, (3, 3), 0)
+
+    # Threshold the image, then perform a series of erosions + dilations to remove any small regions of noise
+    thresh = cv2.threshold(gray, 45, 255, cv2.THRESH_BINARY)[1]
+    thresh = cv2.erode(thresh, None, iterations=2)
+    thresh = cv2.dilate(thresh, None, iterations=2)
+
+    # Find the contours in the thresholded image, then grab the largest one
+    cnts = cv2.findContours(thresh.copy(), cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+    cnts = imutils.grab_contours(cnts)
+    c = max(cnts, key=cv2.contourArea)
+
+    # Find the extreme points
+    extLeft = tuple(c[c[:, :, 0].argmin()][0])
+    extRight = tuple(c[c[:, :, 0].argmax()][0])
+    extTop = tuple(c[c[:, :, 1].argmin()][0])
+    extBot = tuple(c[c[:, :, 1].argmax()][0])
+    ADD_PIXELS = 0
+    new_img = img[extTop[1] - ADD_PIXELS:extBot[1] + ADD_PIXELS,
+              extLeft[0] - ADD_PIXELS:extRight[0] + ADD_PIXELS].copy()
+
+    return new_img
+
+
+def process_images(input_dir, output_dir):
+    """
+    Process images from the input directory and save the processed images to the output directory.
+
+    Parameters:
+        input_dir (str): The input directory containing the original images.
+        output_dir (str): The output directory where the processed images will be saved.
+
+    Returns:
+        None
+    """
+    input_dir = Path(input_dir)
+    output_dir = Path(output_dir)
+
+    for element in tqdm(input_dir.iterdir()):
+
+        # This line ensures that 'element' is not a file
+        if element.is_dir():
+
+            save_path = output_dir / element.name
+            for img_path in element.iterdir():
+
+                image = cv2.imread(str(img_path))
+                new_img = crop_img(image)
+                new_img = cv2.resize(new_img, (IMAGE_SIZE, IMAGE_SIZE))
+
+                save_path.mkdir(parents=True, exist_ok=True)
+                cv2.imwrite(str(save_path / img_path.name), new_img)
+
+
+if __name__ == "__main__":
+
+    for dataset in ['Training', 'Testing']:
+        process_images(os.path.join(PROJECT_DIR, 'data', 'raw', dataset),
+                       os.path.join(PROJECT_DIR, 'data', 'processed', dataset))
+
+    print('Finished')

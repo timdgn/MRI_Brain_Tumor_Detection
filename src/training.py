@@ -8,7 +8,7 @@ import seaborn as sns
 import matplotlib.pyplot as plt
 
 from settings import *
-import preprocessing
+import preprocessing as pre
 
 
 def get_available_devices():
@@ -286,7 +286,8 @@ def main(X_train, X_val, X_test, y_train, y_val, y_test):
 
 
 if __name__ == '__main__':
-    X_train, X_val, X_test, y_train, y_val, y_test = preprocessing.main()
+
+    X_train, X_val, X_test, y_train, y_val, y_test = pre.preprocessing()
 
     start_time = time.time()
     main(X_train, X_val, X_test, y_train, y_val, y_test)
