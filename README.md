@@ -12,7 +12,7 @@ The 7023 MRI images come from [this](https://www.kaggle.com/datasets/masoudnickp
 
 To avoid training a heavy classification model from scratch, I use the EfficientNetV2B0 model.
 It's a lightweight and very efficient model on imagenet and image classification transfer learning tasks.
-Information about the model can be found [here](https://keras.io/api/keras_cv/models/backbones/efficientnetv2/). 
+Information about the model can be found [here](https://arxiv.org/abs/2104.00298). 
 
 ## Table of Contents
 - [Local installation](#local-installation)

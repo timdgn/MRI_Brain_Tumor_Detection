@@ -76,14 +76,16 @@ def train_model(model, X_train, X_val, y_train, y_val):
     filename = f"effnet_{now.strftime('%Y-%m-%d_%H-%M-%S')}.keras"
 
     # Setting up callbacks model checkpointing, learning rate reduction, and F1 score
-    checkpoint = tf.keras.callbacks.ModelCheckpoint(os.path.join(output_dir, f"{filename}"), monitor="val_f1",
-                                                    save_best_only=True, mode='max', verbose=1)
     reduce_lr = tf.keras.callbacks.ReduceLROnPlateau(monitor='val_f1', factor=0.3, patience=2, min_delta=0.001,
                                                      mode='max', verbose=1)
+    checkpoint = tf.keras.callbacks.ModelCheckpoint(os.path.join(output_dir, f"{filename}"), monitor="val_f1",
+                                                    save_best_only=True, mode='max', verbose=1)
+    early_stop = tf.keras.callbacks.EarlyStopping(monitor='val_f1', min_delta=0.001, patience=5, verbose=1, mode='max',
+                                                  start_from_epoch=3)
 
     # Train the model with the specified data and training parameters
     history = model.fit(X_train, y_train, validation_data=(X_val, y_val), epochs=EPOCHS, batch_size=BATCH_SIZE,
-                        verbose=1, callbacks=[checkpoint, reduce_lr])
+                        verbose=1, callbacks=[reduce_lr, checkpoint, early_stop])
 
     print('Training done !', end='\n\n')
 
