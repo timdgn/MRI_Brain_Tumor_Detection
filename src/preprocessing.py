@@ -119,7 +119,8 @@ def preprocessing():
 
 def crop_img(img):
     """
-    Function to crop an image based on its extreme points.
+    It takes an input image, processes it to identify the main object or region of interest,
+    and then crops the image based on its extreme points to include only that region.
 
     Parameters:
         img: input image to be cropped
@@ -128,6 +129,7 @@ def crop_img(img):
         new_img: cropped image based on extreme points
     """
 
+    # Convert image to grayscale and apply gaussian blur to smooths out the image and reduces noise
     gray = cv2.cvtColor(img, cv2.COLOR_RGB2GRAY)
     gray = cv2.GaussianBlur(gray, (3, 3), 0)
 
@@ -146,9 +148,11 @@ def crop_img(img):
     extRight = tuple(c[c[:, :, 0].argmax()][0])
     extTop = tuple(c[c[:, :, 1].argmin()][0])
     extBot = tuple(c[c[:, :, 1].argmax()][0])
+
+    # Add pixels to each extreme point and crop the image using the extreme points
     ADD_PIXELS = 0
     new_img = img[extTop[1] - ADD_PIXELS:extBot[1] + ADD_PIXELS,
-              extLeft[0] - ADD_PIXELS:extRight[0] + ADD_PIXELS].copy()
+                  extLeft[0] - ADD_PIXELS:extRight[0] + ADD_PIXELS].copy()
 
     return new_img
 
