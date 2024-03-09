@@ -24,7 +24,7 @@ def inference(model, img):
 
 
 if __name__ == "__main__":
-    X, y = load_data(['Training', 'Testing'])
+    X, y = load_data(['Testing'])
     img = X[37]
     img = np.expand_dims(img, axis=0)
     model = load_last_model()

@@ -73,13 +73,17 @@ def train_model(model, X_train, X_val, y_train, y_val):
 
     now = datetime.datetime.now()
     output_dir = os.path.join(PROJECT_DIR, 'models')
-    filename = f"effnet_{now.strftime('%Y-%m-%d_%H-%M-%S')}.keras"
+    filename = f"effnet_{now.strftime('%Y-%m-%d_%H-%M-%S')}"
+
+    # Save model architecture
+    with open(os.path.join(output_dir, f"{filename}.json"), "w") as json_file:
+        json_file.write(model.to_json())
 
     # Setting up callbacks model checkpointing, learning rate reduction, and F1 score
     reduce_lr = tf.keras.callbacks.ReduceLROnPlateau(monitor='val_f1', factor=0.3, patience=2, min_delta=0.001,
                                                      mode='max', verbose=1)
-    checkpoint = tf.keras.callbacks.ModelCheckpoint(os.path.join(output_dir, f"{filename}"), monitor="val_f1",
-                                                    save_best_only=True, mode='max', verbose=1)
+    checkpoint = tf.keras.callbacks.ModelCheckpoint(os.path.join(output_dir, f"{filename}.h5"), monitor="val_f1",
+                                                    save_best_only=True, save_weights_only=True, mode='max', verbose=1)
     early_stop = tf.keras.callbacks.EarlyStopping(monitor='val_f1', min_delta=0.001, patience=5, verbose=1, mode='max',
                                                   start_from_epoch=3)
 
@@ -163,10 +167,19 @@ def load_last_model():
 
     models_dir = os.path.join(PROJECT_DIR, 'models')
 
-    files = os.listdir(models_dir)
-    filename = sorted(files)[-1]
+    # Find the latest JSON file
+    json_files = [f for f in os.listdir(models_dir) if f.endswith('.json')]
+    latest_json_file = sorted(json_files)[-1]
 
-    model = tf.keras.models.load_model(os.path.join(models_dir, filename))
+    # Load the model architecture from JSON
+    with open(os.path.join(models_dir, latest_json_file), "r") as json_file:
+        loaded_model_json = json_file.read()
+
+    model = tf.keras.models.model_from_json(loaded_model_json)
+
+    # Load the weights from the corresponding H5 file
+    weights_file = latest_json_file.replace('.json', '.h5')
+    model.load_weights(os.path.join(models_dir, weights_file))
 
     return model
 
