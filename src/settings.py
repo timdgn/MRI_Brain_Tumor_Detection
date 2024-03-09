@@ -21,8 +21,8 @@ IMAGE_SIZE = 150
 # Should be an integer or None
 IMG_LIMIT = None
 
-# Epochs. Should be around 15
-EPOCHS = 12
+# Epochs. Should be around 20
+EPOCHS = 15
 
 # Batch size.
-BATCH_SIZE = 32
+BATCH_SIZE = 64
