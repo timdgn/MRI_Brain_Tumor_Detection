@@ -9,7 +9,7 @@ from preprocessing import load_data
 from settings import PROJECT_DIR, TRANSLATION
 
 
-def progress_bar(inputs):
+def progress_bar_inference(inputs):
     """
     A function to display a progress bar while analyzing an image,
     and then send the inputs to a specified URL and return the response.
@@ -32,14 +32,15 @@ def progress_bar(inputs):
     return response
 
 
-def infos():
+def show_infos():
     """
     Function to retrieve the latest model version from the specified directory.
     """
 
     models_dir = os.path.join(PROJECT_DIR, 'models')
     files = os.listdir(models_dir)
-    last_model_filename = sorted(files)[-1]
+    ext = 'h5'
+    last_model_filename = sorted([f for f in files if f.endswith(ext)])[-1]
 
     st.write("#")
     st.write("#")
@@ -48,7 +49,7 @@ def infos():
     st.caption(f'By Timmothy Dangeon, PharmD & Machine Learning Engineer')
     st.caption('Linkedin : linkedin.com/in/timdangeon')
     st.caption('Github : github.com/timdgn')
-    st.caption(f'Model version : {last_model_filename[7:-6]}')
+    st.caption(f'Model version : {last_model_filename[7:-len(ext)-1]}')
 
 
 def main():
@@ -96,7 +97,7 @@ def main():
         # converting the inputs into a json format
         inputs = {'image': img.tolist()}
 
-        response = progress_bar(inputs)
+        response = progress_bar_inference(inputs)
 
         if response.status_code == 200:
 
@@ -111,7 +112,7 @@ def main():
         else:
             st.subheader(response.text)
 
-    infos()
+    show_infos()
 
 
 if __name__ == '__main__':
