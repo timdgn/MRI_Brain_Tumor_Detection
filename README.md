@@ -5,19 +5,20 @@
 
 ## Description
 This is a personal project in which I build a classification solution to detect brain tumors through T1-weighted MRI.
+I had the idea of this project thanks to my current job in neuroimaging research.
 The goal is to predict whether a patient has a brain tumor (glioma tumor, meningioma tumor, pituitary tumor) or not based on their brain MRI images 🩻
 
-I had the idea of this project thanks to my current job in neuroimaging research.
 The 7023 MRI images come from [this](https://www.kaggle.com/datasets/masoudnickparvar/brain-tumor-mri-dataset/data) dataset.
+I implemented a processing step on the raw dataset to crop the useless borders of the images.
 
 To avoid training a heavy classification model from scratch, I use the EfficientNetV2B0 model.
 It's a lightweight and very efficient model on imagenet and image classification transfer learning tasks.
-Information about the model can be found [here](https://arxiv.org/abs/2104.00298). 
+Information about the model can be found [here](https://arxiv.org/abs/2104.00298).
 
 ## Table of Contents
 - [Local installation](#local-installation)
 - [Usage](#usage)
-- [ML model's performances](#ml-models-performances)
+- [Model performances](#model-performances)
 
 ## Local installation
 To install and run this project on your local machine, follow these steps :
@@ -34,7 +35,9 @@ To install and run this project on your local machine, follow these steps :
 ## Usage
 Follow the 3 numbered steps on the deployed web app to test your tumor diagnostic skills and my AI model's 😉
 
-## ML model's performances
+## Model performances
+I achieved a highly favorable F1 Score exceeding 0.99 when evaluating on the test dataset.  
+I do not use the accuracy as the classes are not well-balanced and this could cause a bias in its default weights.  
 I use Keras's checkpoint callback to ensure the model saved is the one with the highest validation macro F1 score.
 
 ![Training history](plots/history/History.png)
