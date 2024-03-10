@@ -1,6 +1,8 @@
 import cv2
 import numpy as np
 import tensorflow as tf
+from matplotlib import pyplot as plt
+import seaborn as sns
 from tqdm import tqdm
 from sklearn.model_selection import train_test_split
 from sklearn.utils import shuffle
@@ -10,12 +12,13 @@ from pathlib import Path
 from settings import *
 
 
-def load_data(data_sets):
+def load_data(data_sets, plot=False):
     """
     Load and preprocess image data for training and testing.
 
     Parameters:
         data_sets (list): List of data sets to load. E.g. ['Training', 'Testing']
+        plot (bool, optional): Whether to plot the distribution of the images. Defaults to False.
 
     Returns
         X (np.array): Array of preprocessed images.
@@ -34,19 +37,52 @@ def load_data(data_sets):
                 X.append(img)
                 y.append(label)
 
-    return np.array(X), np.array(y)
+    # Convert lists to numpy arrays
+    X = np.array(X)
+    y = np.array(y)
+
+    # Plot label distribution
+    if plot:
+        label_counts = [np.sum(y == label) for label in LABELS]
+        sns.set_style("whitegrid")
+        plt.figure(figsize=(10, 6))
+        ax = sns.barplot(x=LABELS, y=label_counts, palette="viridis")
+
+        # Add the numbers above the bars
+        for i, count in enumerate(label_counts):
+            ax.text(i, count + 0.5, str(count), ha='center', va='bottom', fontsize=10)
+
+        plt.title('Labels distribution of the images', size=18, fontweight='bold')
+        plt.xlabel('Labels')
+        plt.ylabel('Count')
+        plt.tight_layout()
+
+        # Make the bars thinner
+        for patch in ax.patches:
+            current_width = patch.get_width()
+            diff = current_width - 0.5
+            patch.set_width(0.5)
+            patch.set_x(patch.get_x() + diff * .5)
+
+        output_dir = os.path.join(PROJECT_DIR, 'plots', 'labels_distribution')
+        filename = 'labels_distribution.png'
+        plt.savefig(os.path.join(output_dir, filename), dpi=300)
+
+        plt.show()
+
+    return X, y
 
 
 def split_data(X, y):
     """
-    Shuffles the data and splits it into training and test sets.
+    Shuffles the data and splits it into training, validation, and test sets.
 
     Parameters:
         X (array-like): The input features.
         y (array-like): The target variable.
 
     Returns:
-        tuple: A tuple containing the training and test sets for X and y.
+        tuple: A tuple containing the training, validation, and test sets for X and y.
     """
 
     X, y = shuffle(X, y)
@@ -108,7 +144,7 @@ def preprocessing():
 
     print('Starting preprocessing...')
 
-    X, y = load_data(['Training', 'Testing'])
+    X, y = load_data(['Training', 'Testing'], plot=True)
     X_train, X_val, X_test, y_train, y_val, y_test = split_data(X, y)
     y_train, y_val, y_test = one_hot(y_train, y_val, y_test)
 

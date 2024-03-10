@@ -7,9 +7,8 @@
 - [Usage](#usage)
 - [Model performances](#model-performances)
 
-
 ## Preview
-![preview](docs/Preview.png)
+<img src="docs/Preview.png" width=75%>
 
 ## Description
 This is a personal project in which I build a classification solution to detect brain tumors through T1-weighted MRI.
@@ -22,6 +21,9 @@ I implemented a processing step on the raw dataset to crop the useless borders o
 To avoid training a heavy classification model from scratch, I use the EfficientNetV2B0 model.
 It's a lightweight and very efficient model on imagenet and image classification transfer learning tasks.
 Information about the model can be found [here](https://arxiv.org/abs/2104.00298).
+
+<img src="plots/labels_distribution/labels_distribution.png" width=75%>
+
 
 ## Local installation
 To install and run this project on your local machine, follow these steps :
@@ -39,10 +41,10 @@ To install and run this project on your local machine, follow these steps :
 Follow the 3 numbered steps on the deployed web app to test your tumor diagnostic skills and my AI model's 🤖
 
 ## Model performances
-I achieved a highly favorable F1 Score exceeding 0.99 when evaluating on the test dataset.  
+I achieved a highly favorable F1 Score **exceeding 0.99** when evaluating on the test dataset.  
 I do not use the accuracy as the classes are not well-balanced and this could cause a bias in its default weights.  
 I use Keras's checkpoint callback to ensure the model saved is the one with the highest validation macro F1 score.
 
-![Training history](plots/history/History.png)
-![Confusion_matrix](plots/confusion/Confusion_Matrix.png)
-![Evalutaion metrics](plots/metrics/Metrics.png)
+<img src="plots/history/History.png" width=75%>
+<img src="plots/confusion/Confusion_Matrix.png" width=75%>
+<img src="plots/metrics/Metrics.png" width=50%>
