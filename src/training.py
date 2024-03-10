@@ -290,7 +290,12 @@ def main(X_train, X_val, X_test, y_train, y_val, y_test):
     get_available_devices()
 
     model = create_model()
+
+    start_time = time.perf_counter()
     model, history = train_model(model, X_train, X_val, y_train, y_val)
+    time_taken = time.perf_counter() - start_time
+    print(f'--- Training time taken: {time_taken:.2f} seconds ({time_taken / 60:.2f} minutes) ---')
+
     plot_history(history)
 
     y_pred, y_test = prediction(model, X_test, y_test)
@@ -302,9 +307,4 @@ if __name__ == '__main__':
 
     X_train, X_val, X_test, y_train, y_val, y_test = pre.preprocessing()
 
-    start_time = time.time()
     main(X_train, X_val, X_test, y_train, y_val, y_test)
-    time_taken = time.time() - start_time
-
-    # Print seconds and minutes taken with an f-string
-    print(f'--- Time taken: {time_taken:.2f} seconds ({time_taken / 60:.2f} minutes) ---')
