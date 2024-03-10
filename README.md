@@ -1,5 +1,13 @@
 # Brain MRI Tumor Classification
 
+## Table of Contents
+- [Preview](#preview)
+- [Description](#description)
+- [Local installation](#local-installation)
+- [Usage](#usage)
+- [Model performances](#model-performances)
+
+
 ## Preview
 ![preview](docs/Preview.png)
 
@@ -15,11 +23,6 @@ To avoid training a heavy classification model from scratch, I use the Efficient
 It's a lightweight and very efficient model on imagenet and image classification transfer learning tasks.
 Information about the model can be found [here](https://arxiv.org/abs/2104.00298).
 
-## Table of Contents
-- [Local installation](#local-installation)
-- [Usage](#usage)
-- [Model performances](#model-performances)
-
 ## Local installation
 To install and run this project on your local machine, follow these steps :
 
@@ -33,7 +36,7 @@ To install and run this project on your local machine, follow these steps :
 8. Enjoy ✨
 
 ## Usage
-Follow the 3 numbered steps on the deployed web app to test your tumor diagnostic skills and my AI model's 😉
+Follow the 3 numbered steps on the deployed web app to test your tumor diagnostic skills and my AI model's 🤖
 
 ## Model performances
 I achieved a highly favorable F1 Score exceeding 0.99 when evaluating on the test dataset.  
