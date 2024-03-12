@@ -91,8 +91,6 @@ def train_model(model, X_train, X_val, y_train, y_val):
     history = model.fit(X_train, y_train, validation_data=(X_val, y_val), epochs=EPOCHS, batch_size=BATCH_SIZE,
                         verbose=1, callbacks=[reduce_lr, checkpoint, early_stop])
 
-    print('Training done !', end='\n\n')
-
     return model, history
 
 
@@ -237,7 +235,7 @@ def plot_conf_matrix(y_pred, y_test):
 
 def plot_metrics(y_pred, y_test):
     """
-    Generates a lollipop plot of precision, F1 score, and recall based on the predicted labels and the actual labels.
+    Generates a bar plot of precision, F1 score, and recall based on the predicted labels and the actual labels.
 
     Parameters:
         y_pred (array-like): An array or a list-like object containing the predicted labels.
@@ -253,18 +251,27 @@ def plot_metrics(y_pred, y_test):
 
     metrics = {'Precision': precision, 'Recall': recall, 'F1 Score': f1}
 
-    fig, ax = plt.subplots(figsize=(5, 7))
-    ax.vlines(x=list(metrics.keys()), ymin=0, ymax=list(metrics.values()), alpha=0.7)
-    ax.plot(list(metrics.keys()), list(metrics.values()), 'o')
+    sns.set_style("whitegrid")
+    plt.figure(figsize=(10, 6))
+    ax = sns.barplot(x=list(metrics.keys()), y=list(metrics.values()), palette="viridis")
 
+    # Add the numbers above the bars
     for i, metric in enumerate(metrics.keys()):
-        ax.text(i, metrics[metric], f'{metrics[metric]:.3f}', ha='center', va='bottom')
+        ax.text(i, metrics[metric] + 0.01, f'{metrics[metric]:.3f}', ha='center', va='bottom', fontsize=10)
 
-    ax.set_title('Test dataset metrics', size=18, fontweight='bold')
-    ax.grid(axis='y')
+    plt.title('Test dataset metrics', size=18, fontweight='bold')
+    plt.ylabel('Value')
+    plt.tight_layout()
 
+    # Make the bars thinner
+    for patch in ax.patches:
+        current_width = patch.get_width()
+        diff = current_width - 0.5
+        patch.set_width(0.5)
+        patch.set_x(patch.get_x() + diff * .5)
+        
     output_dir = os.path.join(PROJECT_DIR, 'plots', 'metrics')
-    filename = f'Metrics.png'
+    filename = 'Metrics.png'
     plt.savefig(os.path.join(output_dir, filename), dpi=300)
 
     plt.show()
