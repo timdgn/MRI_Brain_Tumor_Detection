@@ -108,10 +108,13 @@ def plot_history(history):
     epochs = [ep + 1 for ep in history.epoch]
     plt.figure(figsize=(12, 4))
 
+    train_color = '#440154'
+    val_color = '#5ec962'
+
     # Plot training & validation f1 values
     plt.subplot(1, 2, 1)
-    plt.plot(epochs, history.history['f1'])
-    plt.plot(epochs, history.history['val_f1'])
+    plt.plot(epochs, history.history['f1'], color=train_color)
+    plt.plot(epochs, history.history['val_f1'], color=val_color)
     plt.title('Model F1 Score', size=18, fontweight='bold')
     plt.ylabel('F1 Score')
     plt.xlabel('Epoch')
@@ -129,8 +132,8 @@ def plot_history(history):
 
     # Plot training & validation loss values
     plt.subplot(1, 2, 2)
-    plt.plot(epochs, history.history['loss'])
-    plt.plot(epochs, history.history['val_loss'])
+    plt.plot(epochs, history.history['loss'], color=train_color)
+    plt.plot(epochs, history.history['val_loss'], color=val_color)
     plt.title('Model Loss', size=18, fontweight='bold')
     plt.ylabel('Loss')
     plt.xlabel('Epoch')
@@ -221,7 +224,7 @@ def plot_conf_matrix(y_pred, y_test):
     plt.figure(figsize=(10, 8))
     sns.set(font_scale=1.2)
     sns.heatmap(cm, annot=True, fmt='d', alpha=0.7, linewidths=2, xticklabels=LABELS, yticklabels=LABELS,
-                cmap='flare')
+                cmap='viridis')
     plt.xlabel('Predicted labels')
     plt.ylabel('True labels')
     plt.title('Heatmap of the Test dataset Confusion Matrix', fontsize=18, fontweight='bold')
@@ -269,7 +272,7 @@ def plot_metrics(y_pred, y_test):
         diff = current_width - 0.5
         patch.set_width(0.5)
         patch.set_x(patch.get_x() + diff * .5)
-        
+
     output_dir = os.path.join(PROJECT_DIR, 'plots', 'metrics')
     filename = 'Metrics.png'
     plt.savefig(os.path.join(output_dir, filename), dpi=300)
