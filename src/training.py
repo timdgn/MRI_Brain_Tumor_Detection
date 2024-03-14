@@ -3,7 +3,7 @@ import time
 
 import numpy as np
 import tensorflow as tf
-from sklearn.metrics import confusion_matrix, precision_score, f1_score, recall_score
+from sklearn.metrics import confusion_matrix, accuracy_score, precision_score, recall_score, f1_score
 import seaborn as sns
 import matplotlib.pyplot as plt
 
@@ -99,20 +99,41 @@ def plot_history(history):
     Generate a plot to visualize the training and validation F1 Score/loss over epochs and save the plots
 
     Parameters:
-        history: A dictionary containing the training and validation F1 Score/loss history.
+        history: A dictionary containing the training and validation F1 Score/loss/accuracy history.
 
     Returns:
         None
     """
 
     epochs = [ep + 1 for ep in history.epoch]
-    plt.figure(figsize=(12, 4))
+    plt.figure(figsize=(18, 4))
 
     train_color = '#440154'
     val_color = '#5ec962'
 
+    # Plot training & validation accuracy values
+    plt.subplot(1, 3, 1)
+    plt.plot(epochs, history.history['accuracy'], color=train_color)
+    plt.plot(epochs, history.history['val_accuracy'], color=val_color)
+    plt.title('Model Accuracy', size=18, fontweight='bold')
+    plt.ylabel('Accuracy')
+    plt.xlabel('Epoch')
+    plt.legend(['Train', 'Validation'], loc='lower right')
+
+    # Annotate the highest point for accuracy
+    max_acc = max(history.history['accuracy'])
+    max_val_acc = max(history.history['val_accuracy'])
+    plt.annotate(
+        f'Max Train Accuracy: {format(max_acc, ".3f")}\n(Epoch {history.history["accuracy"].index(max_acc) + 1})',
+        xy=(history.history['accuracy'].index(max_acc) + 1, max_acc), xytext=(10, -60),
+        textcoords='offset points', arrowprops=dict(arrowstyle='->'))
+    plt.annotate(
+        f'Max Validation Accuracy: {format(max_val_acc, ".3f")}\n(Epoch {history.history["val_accuracy"].index(max_val_acc) + 1})',
+        xy=(history.history['val_accuracy'].index(max_val_acc) + 1, max_val_acc), xytext=(10, -80),
+        textcoords='offset points', arrowprops=dict(arrowstyle='->'))
+
     # Plot training & validation f1 values
-    plt.subplot(1, 2, 1)
+    plt.subplot(1, 3, 2)
     plt.plot(epochs, history.history['f1'], color=train_color)
     plt.plot(epochs, history.history['val_f1'], color=val_color)
     plt.title('Model F1 Score', size=18, fontweight='bold')
@@ -131,7 +152,7 @@ def plot_history(history):
                  textcoords='offset points', arrowprops=dict(arrowstyle='->'))
 
     # Plot training & validation loss values
-    plt.subplot(1, 2, 2)
+    plt.subplot(1, 3, 3)
     plt.plot(epochs, history.history['loss'], color=train_color)
     plt.plot(epochs, history.history['val_loss'], color=val_color)
     plt.title('Model Loss', size=18, fontweight='bold')
@@ -151,6 +172,7 @@ def plot_history(history):
 
     plt.tight_layout()
 
+    # Saving the plot
     output_dir = os.path.join(PROJECT_DIR, 'plots', 'history')
     filename = f'History.png'
     plt.savefig(os.path.join(output_dir, filename), dpi=300)
@@ -238,7 +260,7 @@ def plot_conf_matrix(y_pred, y_test):
 
 def plot_metrics(y_pred, y_test):
     """
-    Generates a bar plot of precision, F1 score, and recall based on the predicted labels and the actual labels.
+    Generates a bar plot of accuracy, precision, recall, and F1 score based on the predicted labels and the actual labels.
 
     Parameters:
         y_pred (array-like): An array or a list-like object containing the predicted labels.
@@ -248,14 +270,15 @@ def plot_metrics(y_pred, y_test):
         None
     """
 
+    accuracy = accuracy_score(y_test, y_pred)
     precision = precision_score(y_test, y_pred, average='macro')
-    f1 = f1_score(y_test, y_pred, average='macro')
     recall = recall_score(y_test, y_pred, average='macro')
+    f1 = f1_score(y_test, y_pred, average='macro')
 
-    metrics = {'Precision': precision, 'Recall': recall, 'F1 Score': f1}
+    metrics = {'Accuracy': accuracy, 'Precision': precision, 'Recall': recall, 'F1 Score': f1}
 
     sns.set_style("whitegrid")
-    plt.figure(figsize=(10, 6))
+    plt.figure(figsize=(12, 6))
     ax = sns.barplot(x=list(metrics.keys()), y=list(metrics.values()), palette="viridis")
 
     # Add the numbers above the bars
