@@ -106,13 +106,13 @@ def plot_history(history):
     """
 
     epochs = [ep + 1 for ep in history.epoch]
-    plt.figure(figsize=(18, 4))
+    plt.figure(figsize=(12, 8))
 
     train_color = '#440154'
     val_color = '#5ec962'
 
     # Plot training & validation accuracy values
-    plt.subplot(1, 3, 1)
+    plt.subplot(2, 2, 1)
     plt.plot(epochs, history.history['accuracy'], color=train_color)
     plt.plot(epochs, history.history['val_accuracy'], color=val_color)
     plt.title('Model Accuracy', size=18, fontweight='bold')
@@ -133,7 +133,7 @@ def plot_history(history):
         textcoords='offset points', arrowprops=dict(arrowstyle='->'))
 
     # Plot training & validation f1 values
-    plt.subplot(1, 3, 2)
+    plt.subplot(2, 2, 2)
     plt.plot(epochs, history.history['f1'], color=train_color)
     plt.plot(epochs, history.history['val_f1'], color=val_color)
     plt.title('Model F1 Score', size=18, fontweight='bold')
@@ -152,7 +152,7 @@ def plot_history(history):
                  textcoords='offset points', arrowprops=dict(arrowstyle='->'))
 
     # Plot training & validation loss values
-    plt.subplot(1, 3, 3)
+    plt.subplot(2, 2, 3)
     plt.plot(epochs, history.history['loss'], color=train_color)
     plt.plot(epochs, history.history['val_loss'], color=val_color)
     plt.title('Model Loss', size=18, fontweight='bold')
