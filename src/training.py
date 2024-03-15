@@ -279,7 +279,8 @@ def plot_metrics(y_pred, y_test):
 
     sns.set_style("whitegrid")
     plt.figure(figsize=(12, 6))
-    ax = sns.barplot(x=list(metrics.keys()), y=list(metrics.values()), palette="viridis")
+    ax = sns.barplot(x=list(metrics.keys()), y=list(metrics.values()), hue=list(metrics.keys()), palette="viridis",
+                     legend=False)
 
     # Add the numbers above the bars
     for i, metric in enumerate(metrics.keys()):

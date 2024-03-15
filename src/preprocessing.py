@@ -46,7 +46,7 @@ def load_data(data_sets, plot=False):
         label_counts = [np.sum(y == label) for label in LABELS]
         sns.set_style("whitegrid")
         plt.figure(figsize=(10, 6))
-        ax = sns.barplot(x=LABELS, y=label_counts, palette="viridis")
+        ax = sns.barplot(x=LABELS, y=label_counts, hue=LABELS, palette="viridis", legend=False)
 
         # Add the numbers above the bars
         for i, count in enumerate(label_counts):
