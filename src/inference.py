@@ -1,6 +1,6 @@
 import numpy as np
 
-from settings import *
+from constants import *
 from training import load_last_model
 from preprocessing import load_data
 

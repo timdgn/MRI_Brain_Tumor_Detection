@@ -6,7 +6,7 @@ import numpy as np
 import streamlit as st
 
 from preprocessing import load_data
-from settings import PROJECT_DIR, TRANSLATION
+from constants import PROJECT_DIR, TRANSLATION
 
 
 def display_title():

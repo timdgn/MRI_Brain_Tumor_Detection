@@ -4,7 +4,7 @@ from pydantic import BaseModel
 
 from inference import inference
 from training import load_last_model
-from settings import LABELS
+from constants import LABELS
 
 
 class UserInput(BaseModel):

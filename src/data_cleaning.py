@@ -1,5 +1,5 @@
 import hashlib
-from settings import *
+from constants import *
 
 
 def compute_hash(file):

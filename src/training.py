@@ -7,7 +7,7 @@ from sklearn.metrics import confusion_matrix, accuracy_score, precision_score, r
 import seaborn as sns
 import matplotlib.pyplot as plt
 
-from settings import *
+from constants import *
 import preprocessing as pre
 
 

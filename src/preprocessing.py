@@ -9,7 +9,7 @@ from sklearn.utils import shuffle
 import imutils
 from pathlib import Path
 
-from settings import *
+from constants import *
 
 
 def load_data(data_sets, plot=True):
@@ -144,7 +144,7 @@ def preprocessing():
 
     print('Starting preprocessing...')
 
-    X, y = load_data(['Training', 'Testing'])
+    X, y = load_data(['Training', 'Testing'], plot=False)
     X_train, X_val, X_test, y_train, y_val, y_test = split_data(X, y)
     y_train, y_val, y_test = one_hot(y_train, y_val, y_test)
 
