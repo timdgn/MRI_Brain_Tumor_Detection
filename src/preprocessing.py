@@ -69,6 +69,7 @@ def load_data(data_sets, plot=True):
         plt.savefig(os.path.join(output_dir, filename), dpi=300)
 
         plt.show()
+        plt.close()
 
     return X, y
 

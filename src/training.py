@@ -35,15 +35,17 @@ def create_model():
         model (object): The trained machine learning model.
     """
 
-    # Create EfficientNetB0 model with pre-trained weights
-    effnet = tf.keras.applications.EfficientNetV2B0(weights='imagenet', include_top=False,
-                                                    input_shape=(IMAGE_SIZE, IMAGE_SIZE, 3))
-    model = tf.keras.layers.GlobalAveragePooling2D()(effnet.output)
-    model = tf.keras.layers.Dropout(rate=0.5)(model)
-    model = tf.keras.layers.Dense(4, activation='softmax')(model)
-    model = tf.keras.models.Model(inputs=effnet.input, outputs=model)
+    with tf.device('/GPU:0'):  # Replace with '/CPU:0' if you want to use CPU
 
-    return model
+        # Create EfficientNetB0 model with pre-trained weights
+        effnet = tf.keras.applications.EfficientNetV2B0(weights='imagenet', include_top=False,
+                                                        input_shape=(IMAGE_SIZE, IMAGE_SIZE, 3))
+        model = tf.keras.layers.GlobalAveragePooling2D()(effnet.output)
+        model = tf.keras.layers.Dropout(rate=0.5)(model)
+        model = tf.keras.layers.Dense(4, activation='softmax')(model)
+        model = tf.keras.models.Model(inputs=effnet.input, outputs=model)
+
+        return model
 
 
 def train_model(model, X_train, X_val, y_train, y_val):
@@ -106,6 +108,7 @@ def plot_history(history):
     """
 
     epochs = [ep + 1 for ep in history.epoch]
+    sns.set_style("whitegrid")
     plt.figure(figsize=(12, 8))
 
     train_color = '#440154'
