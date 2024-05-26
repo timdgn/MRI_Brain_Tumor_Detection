@@ -16,7 +16,7 @@ I had the idea of this project thanks to my current job in neuroimaging research
 The goal is to predict whether a patient has a brain tumor (glioma tumor, meningioma tumor, pituitary tumor) or not based on their brain MRI images 🩻
 
 The 7023 MRI images come from [this](https://www.kaggle.com/datasets/masoudnickparvar/brain-tumor-mri-dataset/data) dataset.
-I implemented a processing step on the raw dataset to crop the useless borders of the images.
+I implemented a preprocessing step on the raw dataset to delete the duplicates and crop the useless borders of the images.
 
 To avoid training a heavy classification model from scratch, I use the EfficientNetV2B0 model.
 It's a lightweight and very efficient model on imagenet and image classification transfer learning tasks.

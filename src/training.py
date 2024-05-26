@@ -24,7 +24,7 @@ def get_available_devices():
 
     print("Number of CPU/GPU Available: ", len(tf.config.list_physical_devices()))
     print("CPU: ", tf.config.list_physical_devices('CPU'))
-    print("GPU: ", tf.config.list_physical_devices('GPU'))
+    print("GPU: ", tf.config.list_physical_devices('GPU'), end='\n\n')
 
 
 def create_model():
@@ -63,7 +63,7 @@ def train_model(model, X_train, X_val, y_train, y_val):
         history (object): The history object containing information about the training process.
     """
 
-    print('Starting training...')
+    print('\nStarting training...')
 
     # Compile the model with the specified loss, optimizer, and metrics
     model.compile(loss='categorical_crossentropy',
@@ -113,6 +113,7 @@ def plot_history(history):
 
     train_color = '#440154'
     val_color = '#5ec962'
+    arrow_color = 'black'
 
     # Plot training & validation accuracy values
     plt.subplot(2, 2, 1)
@@ -129,11 +130,11 @@ def plot_history(history):
     plt.annotate(
         f'Max Train Accuracy: {format(max_acc, ".3f")}\n(Epoch {history.history["accuracy"].index(max_acc) + 1})',
         xy=(history.history['accuracy'].index(max_acc) + 1, max_acc), xytext=(10, -60),
-        textcoords='offset points', arrowprops=dict(arrowstyle='->'))
+        textcoords='offset points', arrowprops=dict(arrowstyle='->', color=arrow_color))
     plt.annotate(
         f'Max Validation Accuracy: {format(max_val_acc, ".3f")}\n(Epoch {history.history["val_accuracy"].index(max_val_acc) + 1})',
         xy=(history.history['val_accuracy'].index(max_val_acc) + 1, max_val_acc), xytext=(10, -80),
-        textcoords='offset points', arrowprops=dict(arrowstyle='->'))
+        textcoords='offset points', arrowprops=dict(arrowstyle='->', color=arrow_color))
 
     # Plot training & validation f1 values
     plt.subplot(2, 2, 2)
@@ -149,10 +150,10 @@ def plot_history(history):
     max_val_f1 = max(history.history['val_f1'])
     plt.annotate(f'Max Train F1 Score: {format(max_f1, ".3f")}\n(Epoch {history.history["f1"].index(max_f1) + 1})',
                  xy=(history.history['f1'].index(max_f1) + 1, max_f1), xytext=(10, -60),
-                 textcoords='offset points', arrowprops=dict(arrowstyle='->'))
+                 textcoords='offset points', arrowprops=dict(arrowstyle='->', color=arrow_color))
     plt.annotate(f'Max Validation F1 Score: {format(max_val_f1, ".3f")}\n(Epoch {history.history["val_f1"].index(max_val_f1) + 1})',
                  xy=(history.history['val_f1'].index(max_val_f1) + 1, max_val_f1), xytext=(10, -80),
-                 textcoords='offset points', arrowprops=dict(arrowstyle='->'))
+                 textcoords='offset points', arrowprops=dict(arrowstyle='->', color=arrow_color))
 
     # Plot training & validation loss values
     plt.subplot(2, 2, 3)
@@ -168,10 +169,10 @@ def plot_history(history):
     min_val_loss = min(history.history['val_loss'])
     plt.annotate(f'Min Train Loss: {format(min_loss, ".3f")}\n(Epoch {history.history["loss"].index(min_loss) + 1})',
                  xy=(history.history['loss'].index(min_loss) + 1, min_loss), xytext=(10, 40),
-                 textcoords='offset points', arrowprops=dict(arrowstyle='->'))
+                 textcoords='offset points', arrowprops=dict(arrowstyle='->', color=arrow_color))
     plt.annotate(f'Min Validation Loss: {format(min_val_loss, ".3f")}\n(Epoch {history.history["val_loss"].index(min_val_loss) + 1})',
                  xy=(history.history['val_loss'].index(min_val_loss) + 1, min_val_loss), xytext=(10, 60),
-                 textcoords='offset points', arrowprops=dict(arrowstyle='->'))
+                 textcoords='offset points', arrowprops=dict(arrowstyle='->', color=arrow_color))
 
     plt.tight_layout()
 

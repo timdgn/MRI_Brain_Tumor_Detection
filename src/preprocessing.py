@@ -143,7 +143,7 @@ def preprocessing():
         y_test (array-like): One-hot encoded testing target labels
     """
 
-    print('Starting preprocessing...')
+    print('\nStarting preprocessing...')
 
     X, y = load_data(['Training', 'Testing'], plot=False)
     X_train, X_val, X_test, y_train, y_val, y_test = split_data(X, y)
