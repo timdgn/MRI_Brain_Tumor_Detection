@@ -29,7 +29,7 @@ def load_and_select_random_numbers():
     """
 
     if 'numbers_list' not in st.session_state:
-        st.session_state.X, st.session_state.y = load_data(['Testing'])
+        st.session_state.X, st.session_state.y = load_data(['Testing'], plot=False)
         st.session_state.numbers_list = np.random.choice(len(st.session_state.X), size=8, replace=False)
 
 

@@ -145,7 +145,7 @@ def preprocessing():
 
     print('\nStarting preprocessing...')
 
-    X, y = load_data(['Training', 'Testing'], plot=False)
+    X, y = load_data(['Training', 'Testing'])
     X_train, X_val, X_test, y_train, y_val, y_test = split_data(X, y)
     y_train, y_val, y_test = one_hot(y_train, y_val, y_test)
 
