@@ -11,7 +11,9 @@
 <img src="docs/Preview.png" width=75%>
 
 ## Description
-This is a personal project in which I build a classification solution to detect brain tumors through T1-weighted MRI.
+You can test my website [here](https://tim-brain-mri-diagnostic.streamlit.app/) 😎
+
+This is a personal project in which I build a classification solution to detect brain tumors through T1-weighted, T2-weighted and FLAIR MRI.
 I had the idea of this project thanks to my current job in neuroimaging research.
 The goal is to predict whether a patient has a brain tumor (glioma tumor, meningioma tumor, pituitary tumor) or not based on their brain MRI images 🩻
 
