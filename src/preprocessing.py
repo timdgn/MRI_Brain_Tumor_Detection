@@ -18,7 +18,7 @@ def load_data(data_sets, plot=True):
 
     Parameters:
         data_sets (list): List of data sets to load. E.g. ['Training', 'Testing']
-        plot (bool, optional): Whether to plot the distribution of the images. Defaults to False.
+        plot (bool, optional): Whether to plot the distribution of the images. Defaults to True.
 
     Returns
         X (np.array): Array of preprocessed images.
@@ -145,7 +145,7 @@ def preprocessing():
 
     print('\nStarting preprocessing...')
 
-    X, y = load_data(['Training', 'Testing'])
+    X, y = load_data(['Training', 'Testing'], plot=False)
     X_train, X_val, X_test, y_train, y_val, y_test = split_data(X, y)
     y_train, y_val, y_test = one_hot(y_train, y_val, y_test)
 

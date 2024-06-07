@@ -1,14 +1,15 @@
 import datetime
 import time
 
+import matplotlib.pyplot as plt
 import numpy as np
+import seaborn as sns
 import tensorflow as tf
 from sklearn.metrics import confusion_matrix, accuracy_score, precision_score, recall_score, f1_score
-import seaborn as sns
-import matplotlib.pyplot as plt
+from imblearn.metrics import specificity_score
 
-from constants import *
 import preprocessing as pre
+from constants import *
 
 
 def get_available_devices():
@@ -236,8 +237,8 @@ def plot_conf_matrix(y_pred, y_test):
     Generates a heatmap of the confusion matrix based on the predicted labels and the actual labels.
 
     Parameters:
-        y_pred (array-like): An array or a list-like object containing the predicted labels.
-        y_test (array-like): An array or a list-like object containing the actual labels.
+        y_pred (array-like): An array object containing the predicted labels.
+        y_test (array-like): An array object containing the actual labels.
 
     Returns:
         None
@@ -264,11 +265,11 @@ def plot_conf_matrix(y_pred, y_test):
 
 def plot_metrics(y_pred, y_test):
     """
-    Generates a bar plot of accuracy, precision, recall, and F1 score based on the predicted labels and the actual labels.
+    Generates a bar plot of accuracy, precision, recall (sensitivity), specificity, and F1 score based on the predicted labels and the actual labels.
 
     Parameters:
-        y_pred (array-like): An array or a list-like object containing the predicted labels.
-        y_test (array-like): An array or a list-like object containing the actual labels.
+        y_pred (array-like): An array object containing the predicted labels.
+        y_test (array-like): An array object containing the actual labels.
 
     Returns:
         None
@@ -276,10 +277,17 @@ def plot_metrics(y_pred, y_test):
 
     accuracy = accuracy_score(y_test, y_pred)
     precision = precision_score(y_test, y_pred, average='macro')
-    recall = recall_score(y_test, y_pred, average='macro')
+    recall = recall_score(y_test, y_pred, average='macro')  # Sensitivity
+    specificity = specificity_score(y_test, y_pred, average='macro')
     f1 = f1_score(y_test, y_pred, average='macro')
 
-    metrics = {'Accuracy': accuracy, 'Precision': precision, 'Recall': recall, 'F1 Score': f1}
+    metrics = {
+        'Accuracy': accuracy,
+        'Precision': precision,
+        'Recall (Sensitivity)': recall,
+        'Specificity': specificity,
+        'F1 Score': f1
+    }
 
     sns.set_style("whitegrid")
     plt.figure(figsize=(12, 6))
