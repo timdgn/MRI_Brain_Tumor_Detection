@@ -43,7 +43,7 @@ To install and run this project on your local machine, follow these steps :
 Follow the 3 numbered steps on the deployed web app to test your tumor diagnostic skills and my AI model's 🤖
 
 ## Model performances
-I achieved a highly favorable F1 Score **exceeding 0.99** when evaluating on the test dataset.   
+I achieved an **Accuracy of 0.997**, a **Sensitivity of 0.997** and a **Specificity of 0.999** when evaluating on the test dataset.   
 I use Keras's checkpoint callback to ensure the model saved is the one with the highest validation macro F1 score.
 
 <img src="plots/history/History.png" width=75%>
