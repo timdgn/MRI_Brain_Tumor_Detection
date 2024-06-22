@@ -15,12 +15,12 @@ def display_title():
     """
 
     st.title('Brain Tumor Detection 🧠')
-    st.write('### with a ✨ Deep Learning ✨ algorithm')
+    st.write('### with Deep Learning')
     st.write('#')
-    st.write("Tu vas pouvoir jouer à un petit jeu ! 👇 ")
-    st.write("Chaque image présente l'un de ces éléments : Un glioblastome, un méningiome, une tumeur pituitaire ou bien aucune tumeur si le patient est chanceux !")
+    st.write("Now you can play a little game ! 👇 ")
+    st.write("Each image shows one of the following: Glioma, meningioma, pituitary tumor, or no tumor if the patient is lucky !")
     st.write("#")
-    st.write("1️⃣ - Voici des images d'IRM")
+    st.write("1️⃣ - Here are some MRI images")
 
 
 def load_and_select_random_numbers():
@@ -47,12 +47,12 @@ def display_text_and_form():
     A function to display text and a form, and return the chosen number and submit button.
     """
 
-    st.write("2️⃣ - Essaye de trouver visuellement une tumeur (s'il y en a une 🔍 )")
-    st.write("3️⃣ - Sélectionne le numéro de l'image ici 👇 et clique sur le bouton pour découvrir si tu es meilleur(e) que mon IA 🚀")
+    st.write("2️⃣ - Try to **visually** find a tumor (if there is one 🔍 )")
+    st.write("3️⃣ - Select the image number here 👇 and click the button to find out if you're better than my AI 🚀")
     st.write('')
     with st.form('my_form'):
-        chosen_number = st.selectbox('Choisis un numéro', st.session_state.numbers_list, label_visibility='collapsed')
-        submit_button = st.form_submit_button(label='Diagnostic 👨‍⚕️')
+        chosen_number = st.selectbox('Choose a number', st.session_state.numbers_list, label_visibility='collapsed')
+        submit_button = st.form_submit_button(label='Diagnose 👨‍⚕️')
     st.write('')
     return chosen_number, submit_button
 
@@ -63,7 +63,7 @@ def display_progress_bar(inputs):
     and then send the inputs to a specified URL and return the response.
     """
 
-    progress_text = "Analyse de l'image par IA en cours..."
+    progress_text = "AI image analysis in progress..."
     my_bar = st.progress(0, text=progress_text)
 
     for percent_complete in range(100):
@@ -90,11 +90,11 @@ def diagnose_tumor(chosen_number, submit_button):
         if response.status_code == 200:
             pred_label = response.text[1:-1]
             if true_label == pred_label:
-                st.write(f"L'image {chosen_number} a été identifiée par l'IA comme **{TRANSLATION[pred_label]}**,"
-                         f" ce qui est le bon diagnostic ✅")
+                st.write(f"The image {chosen_number} has been identified by the AI as **{TRANSLATION[pred_label]}**,"
+                         f" which is the right diagnosis ✅")
             else:
-                st.write(f"L'image {chosen_number} a été identifiée par l'IA comme \"**{TRANSLATION[pred_label]}**\", "
-                         f"mais le vrai diagnostic est \"**{TRANSLATION[true_label]}**\"...")
+                st.write(f"The image {chosen_number} has been identified by the AI as \"**{TRANSLATION[pred_label]}**\", "
+                         f"but the true diagnosis is \"**{TRANSLATION[true_label]}**\"...")
         else:
             st.subheader(response.text)
 
@@ -112,7 +112,6 @@ def display_infos():
     st.write("#")
     st.write("")
     st.write("#")
-
     st.caption(f'By Timmothy Dangeon, PharmD & Machine Learning Engineer')
     st.caption('Linkedin : linkedin.com/in/timdangeon')
     st.caption('Github : github.com/timdgn')
