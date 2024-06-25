@@ -17,10 +17,27 @@ def display_title():
     st.title('Brain Tumor Detection 🧠')
     st.write('### with Deep Learning')
     st.write('#')
+
+
+def display_subtitle_classic():
+    """
+    Display the classic subtitle for the Brain Tumor Detection app using Streamlit.
+    """
+
+    st.write("#")
     st.write("Now you can play a little game ! 👇 ")
     st.write("Each image shows one of the following: Glioma, meningioma, pituitary tumor, or no tumor if the patient is lucky !")
     st.write("#")
-    st.write("1️⃣ - Here are some MRI images")
+
+
+def display_subtitle_alt():
+    """
+    Display the label of the chosen image.
+    """
+
+    st.write("#")
+    st.write("Here you can get the AI diagnosis of an image of your choice 👇")
+    st.write("#")
 
 
 def load_and_select_random_numbers():
@@ -38,11 +55,26 @@ def display_random_images():
     Function to display random images based on the session state numbers list.
     """
 
+    st.write("1️⃣ - Here are some MRI images")
     st.image(st.session_state.X[st.session_state.numbers_list], width=150, caption=st.session_state.numbers_list)
     st.write('')
 
 
-def display_text_and_form():
+def display_image():
+    """
+    Function to display an images based on a number.
+    """
+
+    max = len(st.session_state.X) - 1
+    st.write(f"Choose a number between 0 and {max} to get its associated image")
+    st.session_state.chosen_number = st.number_input("Insert a number", min_value=0, max_value=max, value=500, step=1, label_visibility='collapsed')
+    st.write('#')
+
+    st.image(st.session_state.X[st.session_state.chosen_number], width=150)
+    st.write('#')
+
+
+def display_form():
     """
     A function to display text and a form, and return the chosen number and submit button.
     """
@@ -51,10 +83,19 @@ def display_text_and_form():
     st.write("3️⃣ - Select the image number here 👇 and click the button to find out if you're better than my AI 🚀")
     st.write('')
     with st.form('my_form'):
-        chosen_number = st.selectbox('Choose a number', st.session_state.numbers_list, label_visibility='collapsed')
-        submit_button = st.form_submit_button(label='Diagnose 👨‍⚕️')
+        st.session_state.chosen_number = st.selectbox('Choose a number', st.session_state.numbers_list, label_visibility='collapsed')
+        st.session_state.submit_button = st.form_submit_button(label='Diagnose 👨‍⚕️')
     st.write('')
-    return chosen_number, submit_button
+
+
+def display_button():
+    """
+    A function to display a button.
+    """
+
+    st.session_state.submit_button = st.button(label='Diagnose 👨‍⚕️')
+
+    st.write('')
 
 
 def display_progress_bar(inputs):
@@ -80,20 +121,26 @@ def display_progress_bar(inputs):
     return response
 
 
-def diagnose_tumor(chosen_number, submit_button):
-    if submit_button:
-        img = st.session_state.X[chosen_number]
-        true_label = st.session_state.y[chosen_number]
+def diagnose_tumor():
+    """
+    This function retrieves the chosen image and its true label from the session state,
+    sends the image to an AI model for diagnosis, and compares the AI's prediction
+    with the true label.
+    """
+
+    if st.session_state.submit_button:
+        img = st.session_state.X[st.session_state.chosen_number]
+        true_label = st.session_state.y[st.session_state.chosen_number]
         inputs = {'image': img.tolist()}
         response = display_progress_bar(inputs)
 
         if response.status_code == 200:
             pred_label = response.text[1:-1]
             if true_label == pred_label:
-                st.write(f"The image {chosen_number} has been identified by the AI as **{TRANSLATION[pred_label]}**,"
+                st.write(f"The image {st.session_state.chosen_number} has been identified by the AI as **{TRANSLATION[pred_label]}**,"
                          f" which is the right diagnosis ✅")
             else:
-                st.write(f"The image {chosen_number} has been identified by the AI as \"**{TRANSLATION[pred_label]}**\", "
+                st.write(f"The image {st.session_state.chosen_number} has been identified by the AI as \"**{TRANSLATION[pred_label]}**\", "
                          f"but the true diagnosis is \"**{TRANSLATION[true_label]}**\"...")
         else:
             st.subheader(response.text)
@@ -126,10 +173,21 @@ def main():
     """
 
     display_title()
+    tab1, tab2, = st.tabs(["Classic mode", "Special mode"])
     load_and_select_random_numbers()
-    display_random_images()
-    chosen_number, submit_button = display_text_and_form()
-    diagnose_tumor(chosen_number, submit_button)
+
+    with tab1:
+        display_subtitle_classic()
+        display_random_images()
+        display_form()
+        diagnose_tumor()
+
+    with tab2:
+        display_subtitle_alt()
+        display_image()
+        display_button()
+        diagnose_tumor()
+
     display_infos()
 
 
