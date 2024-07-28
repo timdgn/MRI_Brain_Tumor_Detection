@@ -2,7 +2,7 @@ import numpy as np
 from fastapi import FastAPI
 from pydantic import BaseModel
 
-from inference import inference
+from inference import inference, get_heatmap_grad_cam, get_image_grad_cam
 from training import load_last_model
 from constants import LABELS
 
@@ -26,12 +26,15 @@ def get_results(input: UserInput):
         input (UserInput): A UserInput object with one attribute: img.
 
     Returns:
-        str: A string that gives the classification result of the brain MRI.
+        dict: A dictionary containing the classification result and the path to the heatmap image.
     """
 
     img = np.array(input.image)
-    img = np.expand_dims(img, axis=0)
-    pred_number = inference(model, img)
+    img_expanded = np.expand_dims(img, axis=0)
+    pred_number = inference(model, img_expanded)
     pred_class = LABELS[pred_number]
 
-    return pred_class
+    heatmap = get_heatmap_grad_cam(model, img_expanded)
+    grad_cam_image = get_image_grad_cam(img, heatmap)
+
+    return {'prediction': pred_class, 'grad_cam_image': grad_cam_image}

@@ -40,7 +40,9 @@ To install and run this project on your local machine, follow these steps :
 8. Enjoy ✨
 
 ## Usage
-Follow the 3 numbered steps on the deployed web app to test your tumor diagnostic skills and my AI model's 🤖
+Follow the 3 numbered steps on the deployed web app to test your tumor diagnostic skills and my AI model's 🤖  
+Enjoy the Grad-CAM (Gradient-weighted Class Activation Mapping) technique that helps in visualizing the regions of the brain that contributed the most to the model’s decision 🧠  
+<img src="plots/grad_cam/grad_cam_500.png" width=50%>
 
 ## Model performances
 I achieved an **Accuracy of 0.997**, a **Sensitivity of 0.997** and a **Specificity of 0.999** when evaluating on the test dataset.   

@@ -135,13 +135,25 @@ def diagnose_tumor():
         response = display_progress_bar(inputs)
 
         if response.status_code == 200:
-            pred_label = response.text[1:-1]
+            results = response.json()
+            pred_label = results['prediction']
             if true_label == pred_label:
                 st.write(f"The image {st.session_state.chosen_number} has been identified by the AI as **{TRANSLATION[pred_label]}**,"
                          f" which is the right diagnosis ✅")
             else:
                 st.write(f"The image {st.session_state.chosen_number} has been identified by the AI as \"**{TRANSLATION[pred_label]}**\", "
                          f"but the true diagnosis is \"**{TRANSLATION[true_label]}**\"...")
+
+            st.write('#')
+            with st.expander("See brain heatmap"):
+
+                st.write("Here is the original image and the heatmap showing which part of the brain has contributed "
+                         "the most to the AI's decision 🧠")
+                comparison_img_list = [img, results['grad_cam_image']]
+                captions = ['Original image', 'Heatmap image']
+                st.image(comparison_img_list, width=150, caption=captions)
+                os.remove(results['grad_cam_image'])
+
         else:
             st.subheader(response.text)
 
